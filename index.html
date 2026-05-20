@@ -1,68 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Car Mart Mysore | Best Used Cars in Mysuru | Verified Second-Hand Showroom</title>
   <link rel="icon" type="image/png" href="public/images/favicon.png">
-  <meta name="description" content="Verified second-hand used cars in Mysuru. Easy finance, multi-point inspections, test drive support, and transparent pricing at Bogadi 2nd Stage.">
-  
+  <meta name="description"
+    content="Verified second-hand used cars in Mysuru. Easy finance, multi-point inspections, test drive support, and transparent pricing at Bogadi 2nd Stage.">
+
   <!-- FontAwesome & CSS Stylesheet -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="loading">
 
-  <!-- ==========================================================================
-       0. CINEMATIC LOADING ANIMATION
-       ========================================================================== -->
-  <div id="cinematic-loader">
-    <canvas id="loader-canvas"></canvas>
-    
-    <!-- Controls -->
-    <div class="loader-controls">
-      <button class="loader-btn btn-skip" id="btn-skip-loader">
-        <span>Skip Intro</span> <i class="fa-solid fa-forward-step"></i>
-      </button>
-      <button class="loader-btn btn-audio-toggle" id="btn-audio-toggle">
-        <i class="fa-solid fa-volume-xmark" id="audio-toggle-icon"></i>
-      </button>
-    </div>
+<body>
 
-    <!-- Text Overlay -->
-    <div class="loader-overlay-text" id="loader-text-container">
-      <div class="loader-subtitle-tag" id="loader-subtitle">CAR MART MYSORE</div>
-      <h2 class="loader-main-title" id="loader-title">EXPERIENCE PURE PERFORMANCE</h2>
-      <div class="loader-status" id="loader-status-container">
-        <span class="loader-bar"></span>
-        <span class="loader-status-text" id="loader-status-text">INITIALIZING SYSTEMS...</span>
-      </div>
-    </div>
-  </div>
 
   <!-- ==========================================================================
        1. NAVIGATION BAR & MEGA MENU
        ========================================================================== -->
   <nav id="navbar">
     <div class="container nav-container">
-      <a href="#hero" class="logo">
-        <i class="fa-solid fa-car-rear"></i> CAR<span>MART</span>
+      <a href="#hero" class="logo" style="position: relative; height: 50px; width: 300px;">
+        <img src="logo.png" alt="CAR MART Logo"
+          style="height: 220px; width: auto; position: absolute; top: -70px; left: 0; z-index: 1001; pointer-events: none;">
       </a>
-      
+
       <ul class="nav-links">
         <li class="nav-item"><a href="#hero" class="nav-link">Home</a></li>
         <li class="nav-item nav-item-mega">
-          <a href="#featured-cars" class="nav-link">Buy Cars <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: 0.25rem;"></i></a>
+          <a href="#featured-cars" class="nav-link">Buy Cars <i class="fa-solid fa-chevron-down"
+              style="font-size: 0.75rem; margin-left: 0.25rem;"></i></a>
           <!-- Mega Menu Dropdown -->
           <div class="mega-menu">
             <div class="mega-container">
               <div class="mega-sidebar">
                 <div class="mega-sidebar-title">Categories</div>
                 <div class="mega-categories">
-                  <a href="#featured-cars" class="mega-cat-link" onclick="filterByCategory('Hatchback')">Hatchbacks <i class="fa-solid fa-arrow-right-long"></i></a>
-                  <a href="#featured-cars" class="mega-cat-link" onclick="filterByCategory('Sedan')">Sedans <i class="fa-solid fa-arrow-right-long"></i></a>
-                  <a href="#featured-cars" class="mega-cat-link" onclick="filterByCategory('SUV')">SUVs <i class="fa-solid fa-arrow-right-long"></i></a>
-                  <a href="#featured-cars" class="mega-cat-link" onclick="filterByCategory('MUV')">MUVs / MPVs <i class="fa-solid fa-arrow-right-long"></i></a>
+                  <a href="#featured-cars" class="mega-cat-link" onclick="filterByCategory('Hatchback')">Hatchbacks <i
+                      class="fa-solid fa-arrow-right-long"></i></a>
+                  <a href="#featured-cars" class="mega-cat-link" onclick="filterByCategory('Sedan')">Sedans <i
+                      class="fa-solid fa-arrow-right-long"></i></a>
+                  <a href="#featured-cars" class="mega-cat-link" onclick="filterByCategory('SUV')">SUVs <i
+                      class="fa-solid fa-arrow-right-long"></i></a>
+                  <a href="#featured-cars" class="mega-cat-link" onclick="filterByCategory('MUV')">MUVs / MPVs <i
+                      class="fa-solid fa-arrow-right-long"></i></a>
                 </div>
               </div>
               <div class="mega-grid">
@@ -108,10 +91,11 @@
         <li class="nav-item"><a href="#modular-grid" class="nav-link">About</a></li>
         <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
       </ul>
-      
+
       <div class="nav-ctas">
         <a href="tel:09008740899" class="btn-nav btn-nav-outline"><i class="fa-solid fa-phone"></i> Call</a>
-        <a href="https://wa.me/919008740899" target="_blank" class="btn-nav btn-nav-solid"><i class="fa-brands fa-whatsapp"></i> Chat Now</a>
+        <a href="https://wa.me/919008740899" target="_blank" class="btn-nav btn-nav-solid"><i
+            class="fa-brands fa-whatsapp"></i> Chat Now</a>
       </div>
     </div>
   </nav>
@@ -130,11 +114,16 @@
         <div class="hero-title-wrap">
           <h1 class="hero-title">Find Your Perfect<br>Used Car</h1>
         </div>
-        <p class="hero-subtitle">Verified cars, curated premium fleet, easy finance &amp; doorstep test drives — only in Mysore.</p>
+        <p class="hero-subtitle">Verified cars, curated premium fleet, easy finance &amp; doorstep test drives — only in
+          Mysore.</p>
         <div class="hero-buttons">
           <a href="#featured-cars" class="btn-hero btn-hero-solid">Explore Cars</a>
-          <a href="https://wa.me/919008740899?text=Hello%20Car%20Mart,%20I%20would%20like%20to%20book%20a%20doorstep%20test%20drive." target="_blank" class="btn-hero btn-hero-outline"><i class="fa-solid fa-calendar-check" style="margin-right:0.5rem;color:var(--accent-orange);"></i> Book Test Drive</a>
-          <a href="https://wa.me/919008740899" target="_blank" class="btn-hero btn-hero-outline" style="border-color:#16A34A;background:rgba(22,163,74,0.1);"><i class="fa-brands fa-whatsapp" style="margin-right:0.5rem;color:#16A34A;"></i> WhatsApp Now</a>
+          <a href="https://wa.me/919008740899?text=Hello%20Car%20Mart,%20I%20would%20like%20to%20book%20a%20doorstep%20test%20drive."
+            target="_blank" class="btn-hero btn-hero-outline"><i class="fa-solid fa-calendar-check"
+              style="margin-right:0.5rem;color:var(--accent-orange);"></i> Book Test Drive</a>
+          <a href="https://wa.me/919008740899" target="_blank" class="btn-hero btn-hero-outline"
+            style="border-color:#16A34A;background:rgba(22,163,74,0.1);"><i class="fa-brands fa-whatsapp"
+              style="margin-right:0.5rem;color:#16A34A;"></i> WhatsApp Now</a>
         </div>
       </div>
     </div>
@@ -166,7 +155,7 @@
             </select>
           </div>
         </div>
-        
+
         <div class="search-field">
           <label for="search-fuel">Fuel Type</label>
           <div class="search-select-wrapper">
@@ -177,7 +166,7 @@
             </select>
           </div>
         </div>
-        
+
         <div class="search-field">
           <label for="search-transmission">Transmission</label>
           <div class="search-select-wrapper">
@@ -201,7 +190,7 @@
             </select>
           </div>
         </div>
-        
+
         <button type="submit" class="btn-search">
           <i class="fa-solid fa-magnifying-glass"></i> Search Cars
         </button>
@@ -216,18 +205,23 @@
     <div class="container slider-container">
       <div class="slider-title">
         <h2>Certified <span>Showroom Highlights</span></h2>
-        <p style="color: var(--text-muted); margin-top: 0.5rem;">Explore our premium side-profile highlights with detailed second-hand vehicle specifications.</p>
+        <p style="color: var(--text-muted); margin-top: 0.5rem;">Explore our premium side-profile highlights with
+          detailed second-hand vehicle specifications.</p>
       </div>
-      
-      <button class="slider-arrow slider-arrow-left" onclick="slidePrev()"><i class="fa-solid fa-chevron-left"></i></button>
-      <button class="slider-arrow slider-arrow-right" onclick="slideNext()"><i class="fa-solid fa-chevron-right"></i></button>
-      
+
+      <button class="slider-arrow slider-arrow-left" onclick="slidePrev()"><i
+          class="fa-solid fa-chevron-left"></i></button>
+      <button class="slider-arrow slider-arrow-right" onclick="slideNext()"><i
+          class="fa-solid fa-chevron-right"></i></button>
+
       <div class="slider-viewport" id="slider-viewport">
         <!-- Slide 1: Toyota Fortuner -->
         <div class="slide active" data-index="0">
           <div class="slide-content-left">
             <h3 class="slide-car-name">Toyota Fortuner</h3>
-            <span class="slide-car-badge" style="display: inline-block; background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); font-size: 0.85rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 9999px; margin-bottom: 1rem;"><i class="fa-solid fa-certificate"></i> Certified Premium</span>
+            <span class="slide-car-badge"
+              style="display: inline-block; background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); font-size: 0.85rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 9999px; margin-bottom: 1rem;"><i
+                class="fa-solid fa-certificate"></i> Certified Premium</span>
             <div class="slide-specs-grid">
               <div class="slide-spec-item">
                 <span class="slide-spec-label">Year</span>
@@ -246,7 +240,8 @@
                 <span class="slide-spec-value">Automatic</span>
               </div>
             </div>
-            <button class="btn-slide-detail" onclick="triggerCarModal(1)">View Details <i class="fa-solid fa-arrow-right"></i></button>
+            <button class="btn-slide-detail" onclick="triggerCarModal(1)">View Details <i
+                class="fa-solid fa-arrow-right"></i></button>
           </div>
           <div class="slide-image-right">
             <img src="public/images/fortuner.png" alt="Toyota Fortuner">
@@ -257,7 +252,9 @@
         <div class="slide" data-index="1">
           <div class="slide-content-left">
             <h3 class="slide-car-name">Toyota Glanza</h3>
-            <span class="slide-car-badge" style="display: inline-block; background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); font-size: 0.85rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 9999px; margin-bottom: 1rem;"><i class="fa-solid fa-certificate"></i> Certified Premium</span>
+            <span class="slide-car-badge"
+              style="display: inline-block; background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); font-size: 0.85rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 9999px; margin-bottom: 1rem;"><i
+                class="fa-solid fa-certificate"></i> Certified Premium</span>
             <div class="slide-specs-grid">
               <div class="slide-spec-item">
                 <span class="slide-spec-label">Year</span>
@@ -276,7 +273,8 @@
                 <span class="slide-spec-value">Automatic</span>
               </div>
             </div>
-            <button class="btn-slide-detail" onclick="triggerCarModal(2)">View Details <i class="fa-solid fa-arrow-right"></i></button>
+            <button class="btn-slide-detail" onclick="triggerCarModal(2)">View Details <i
+                class="fa-solid fa-arrow-right"></i></button>
           </div>
           <div class="slide-image-right">
             <img src="public/images/glanza.png" alt="Toyota Glanza">
@@ -287,7 +285,9 @@
         <div class="slide" data-index="2">
           <div class="slide-content-left">
             <h3 class="slide-car-name">Toyota Innova Crysta</h3>
-            <span class="slide-car-badge" style="display: inline-block; background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); font-size: 0.85rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 9999px; margin-bottom: 1rem;"><i class="fa-solid fa-certificate"></i> Certified Premium</span>
+            <span class="slide-car-badge"
+              style="display: inline-block; background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); font-size: 0.85rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 9999px; margin-bottom: 1rem;"><i
+                class="fa-solid fa-certificate"></i> Certified Premium</span>
             <div class="slide-specs-grid">
               <div class="slide-spec-item">
                 <span class="slide-spec-label">Year</span>
@@ -306,7 +306,8 @@
                 <span class="slide-spec-value">Manual</span>
               </div>
             </div>
-            <button class="btn-slide-detail" onclick="triggerCarModal(3)">View Details <i class="fa-solid fa-arrow-right"></i></button>
+            <button class="btn-slide-detail" onclick="triggerCarModal(3)">View Details <i
+                class="fa-solid fa-arrow-right"></i></button>
           </div>
           <div class="slide-image-right">
             <img src="public/images/innova.png" alt="Toyota Innova Crysta">
@@ -317,7 +318,9 @@
         <div class="slide" data-index="3">
           <div class="slide-content-left">
             <h3 class="slide-car-name">Tata Harrier</h3>
-            <span class="slide-car-badge" style="display: inline-block; background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); font-size: 0.85rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 9999px; margin-bottom: 1rem;"><i class="fa-solid fa-certificate"></i> Certified Premium</span>
+            <span class="slide-car-badge"
+              style="display: inline-block; background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); font-size: 0.85rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 9999px; margin-bottom: 1rem;"><i
+                class="fa-solid fa-certificate"></i> Certified Premium</span>
             <div class="slide-specs-grid">
               <div class="slide-spec-item">
                 <span class="slide-spec-label">Year</span>
@@ -336,7 +339,8 @@
                 <span class="slide-spec-value">Manual</span>
               </div>
             </div>
-            <button class="btn-slide-detail" onclick="triggerCarModal(4)">View Details <i class="fa-solid fa-arrow-right"></i></button>
+            <button class="btn-slide-detail" onclick="triggerCarModal(4)">View Details <i
+                class="fa-solid fa-arrow-right"></i></button>
           </div>
           <div class="slide-image-right">
             <img src="public/images/harrier.png" alt="Tata Harrier">
@@ -347,7 +351,9 @@
         <div class="slide" data-index="4">
           <div class="slide-content-left">
             <h3 class="slide-car-name">Hyundai Creta</h3>
-            <span class="slide-car-badge" style="display: inline-block; background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); font-size: 0.85rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 9999px; margin-bottom: 1rem;"><i class="fa-solid fa-certificate"></i> Certified Premium</span>
+            <span class="slide-car-badge"
+              style="display: inline-block; background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); font-size: 0.85rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 9999px; margin-bottom: 1rem;"><i
+                class="fa-solid fa-certificate"></i> Certified Premium</span>
             <div class="slide-specs-grid">
               <div class="slide-spec-item">
                 <span class="slide-spec-label">Year</span>
@@ -366,14 +372,15 @@
                 <span class="slide-spec-value">Manual</span>
               </div>
             </div>
-            <button class="btn-slide-detail" onclick="triggerCarModal(5)">View Details <i class="fa-solid fa-arrow-right"></i></button>
+            <button class="btn-slide-detail" onclick="triggerCarModal(5)">View Details <i
+                class="fa-solid fa-arrow-right"></i></button>
           </div>
           <div class="slide-image-right">
             <img src="public/images/creta.png" alt="Hyundai Creta">
           </div>
         </div>
       </div>
-      
+
       <div class="slider-dots" id="slider-dots">
         <button class="slider-dot active" onclick="slideTo(0)"></button>
         <button class="slider-dot" onclick="slideTo(1)"></button>
@@ -392,16 +399,22 @@
       <div class="section-header">
         <div>
           <h2 class="section-title">Verified Used <span>Cars Marketplace</span></h2>
-          <p class="section-desc">Inspected and verified second-hand vehicles in Mysore. Click any card for detailed specifications.</p>
+          <p class="section-desc">Inspected and verified second-hand vehicles in Mysore. Click any card for detailed
+            specifications.</p>
         </div>
         <div id="filter-pills-container" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <button class="btn-card-detail" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: var(--primary); color: #FFF; border-color: var(--primary);" id="btn-filter-all" onclick="resetFilters()">All Cars</button>
-          <button class="btn-card-detail" style="padding: 0.5rem 1rem; font-size: 0.8rem;" id="btn-filter-hatch" onclick="filterByCategory('Hatchback')">Hatchbacks</button>
-          <button class="btn-card-detail" style="padding: 0.5rem 1rem; font-size: 0.8rem;" id="btn-filter-sedan" onclick="filterByCategory('Sedan')">Sedans</button>
-          <button class="btn-card-detail" style="padding: 0.5rem 1rem; font-size: 0.8rem;" id="btn-filter-suv" onclick="filterByCategory('SUV')">SUVs</button>
+          <button class="btn-card-detail"
+            style="padding: 0.5rem 1rem; font-size: 0.8rem; background: var(--primary); color: #FFF; border-color: var(--primary);"
+            id="btn-filter-all" onclick="resetFilters()">All Cars</button>
+          <button class="btn-card-detail" style="padding: 0.5rem 1rem; font-size: 0.8rem;" id="btn-filter-hatch"
+            onclick="filterByCategory('Hatchback')">Hatchbacks</button>
+          <button class="btn-card-detail" style="padding: 0.5rem 1rem; font-size: 0.8rem;" id="btn-filter-sedan"
+            onclick="filterByCategory('Sedan')">Sedans</button>
+          <button class="btn-card-detail" style="padding: 0.5rem 1rem; font-size: 0.8rem;" id="btn-filter-suv"
+            onclick="filterByCategory('SUV')">SUVs</button>
         </div>
       </div>
-      
+
       <div class="grid car-grid" id="cars-grid-container">
         <!-- Rendered Dynamically via JS -->
       </div>
@@ -414,24 +427,26 @@
   <section id="modular-grid">
     <div class="container">
       <h2 class="grid-title">Why Buy From <span>Car Mart Mysore</span></h2>
-      
+
       <div class="modular-layout">
         <!-- Card 1: Verified Cars (Double Width) -->
         <div class="grid-card grid-card-double">
           <div>
             <div class="grid-card-icon"><i class="fa-solid fa-shield-halved"></i></div>
             <h3 class="grid-card-title">Verified Used Cars</h3>
-            <p class="grid-card-text">Every vehicle undergoes a multi-point inspection by certified mechanics. We examine engine health, suspension, electronics, and body frames to ensure peace of mind.</p>
+            <p class="grid-card-text">Every vehicle undergoes a multi-point inspection by certified mechanics. We
+              examine engine health, suspension, electronics, and body frames to ensure peace of mind.</p>
           </div>
           <img src="public/images/creta.png" alt="Verified Car Showcase" class="grid-card-double-img">
         </div>
-        
+
         <!-- Card 2: Easy Finance -->
         <div class="grid-card">
           <div>
             <div class="grid-card-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
             <h3 class="grid-card-title">Easy Finance</h3>
-            <p class="grid-card-text">Get low-interest rate packages from top banking partners in Mysore. Quick documentation and fast online approval support.</p>
+            <p class="grid-card-text">Get low-interest rate packages from top banking partners in Mysore. Quick
+              documentation and fast online approval support.</p>
           </div>
         </div>
 
@@ -440,7 +455,8 @@
           <div>
             <div class="grid-card-icon"><i class="fa-solid fa-key"></i></div>
             <h3 class="grid-card-title">Test Drive Support</h3>
-            <p class="grid-card-text">Schedule a doorstep test drive or visit our Bogadi showroom. Take the vehicle for a spin on city streets to check performance.</p>
+            <p class="grid-card-text">Schedule a doorstep test drive or visit our Bogadi showroom. Take the vehicle for
+              a spin on city streets to check performance.</p>
           </div>
         </div>
 
@@ -450,7 +466,8 @@
           <div>
             <div class="grid-card-icon"><i class="fa-solid fa-tags"></i></div>
             <h3 class="grid-card-title">Sell Your Car</h3>
-            <p class="grid-card-text">Get an instant valuation estimate for your current car in Mysore. We offer fair prices, handle RTO legalities, and complete the transaction within 24 hours.</p>
+            <p class="grid-card-text">Get an instant valuation estimate for your current car in Mysore. We offer fair
+              prices, handle RTO legalities, and complete the transaction within 24 hours.</p>
           </div>
         </div>
 
@@ -459,7 +476,8 @@
           <div>
             <div class="grid-card-icon"><i class="fa-solid fa-file-signature"></i></div>
             <h3 class="grid-card-title">RC Transfer Support</h3>
-            <p class="grid-card-text">Hassle-free ownership transfer assistance. Our team manages Mysore RTO paperwork so you don't have to wait in queues.</p>
+            <p class="grid-card-text">Hassle-free ownership transfer assistance. Our team manages Mysore RTO paperwork
+              so you don't have to wait in queues.</p>
           </div>
         </div>
 
@@ -468,7 +486,8 @@
           <div>
             <div class="grid-card-icon"><i class="fa-solid fa-location-dot"></i></div>
             <h3 class="grid-card-title">Local Mysore Dealer</h3>
-            <p class="grid-card-text">Showroom located in Bogadi 2nd Stage North, Mysuru. Visit us today to inspect certified vehicles offline.</p>
+            <p class="grid-card-text">Showroom located in Bogadi 2nd Stage North, Mysuru. Visit us today to inspect
+              certified vehicles offline.</p>
           </div>
         </div>
       </div>
@@ -490,7 +509,8 @@
       <div class="gallery-header">
         <div class="gallery-label"><i class="fa-solid fa-camera-retro"></i> Showroom Gallery</div>
         <h2 class="gallery-title">Our <span>Premium</span> Fleet</h2>
-        <p class="gallery-subtitle">Handpicked certified vehicles — every car inspected, verified, and ready to drive.</p>
+        <p class="gallery-subtitle">Handpicked certified vehicles — every car inspected, verified, and ready to drive.
+        </p>
       </div>
 
       <!-- Gallery Category Filters -->
@@ -711,8 +731,9 @@
     <div class="container sell-wrapper">
       <div class="sell-details">
         <h2>Get the Best Valuation <span>for Your Used Car</span></h2>
-        <p>Selling your second-hand car in Mysuru is simple. Enter details below to obtain an instant legal valuation estimate.</p>
-        
+        <p>Selling your second-hand car in Mysuru is simple. Enter details below to obtain an instant legal valuation
+          estimate.</p>
+
         <div class="sell-steps">
           <div class="sell-step">
             <div class="sell-step-num">1</div>
@@ -737,7 +758,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="sell-card">
         <form id="sell-form" onsubmit="event.preventDefault(); handleSellSubmit();">
           <div class="form-grid">
@@ -745,25 +766,26 @@
               <label for="sell-name">Full Name</label>
               <input type="text" id="sell-name" class="form-input" required placeholder="Enter name">
             </div>
-            
+
             <div class="form-input-group">
               <label for="sell-phone">Phone Number</label>
               <input type="tel" id="sell-phone" class="form-input" required placeholder="Enter mobile number">
             </div>
-            
+
             <div class="form-input-group">
               <label for="sell-brand">Car Brand</label>
               <input type="text" id="sell-brand" class="form-input" required placeholder="e.g. Maruti Suzuki">
             </div>
-            
+
             <div class="form-input-group">
               <label for="sell-model">Car Model</label>
               <input type="text" id="sell-model" class="form-input" required placeholder="e.g. Swift LXI">
             </div>
-            
+
             <div class="form-input-group">
               <label for="sell-year">Model Year</label>
-              <input type="number" id="sell-year" class="form-input" required min="2010" max="2026" placeholder="e.g. 2020">
+              <input type="number" id="sell-year" class="form-input" required min="2010" max="2026"
+                placeholder="e.g. 2020">
             </div>
 
             <div class="form-input-group">
@@ -771,7 +793,7 @@
               <input type="text" id="sell-remarks" class="form-input" placeholder="e.g. Single owner, minor scratches">
             </div>
           </div>
-          
+
           <button type="submit" class="btn-form-submit">Get Valuation</button>
         </form>
       </div>
@@ -798,15 +820,16 @@
   <footer id="contact">
     <div class="container footer-grid">
       <div class="footer-brand">
-        <h3>CAR<span>MART</span></h3>
-        <p>Best pre-owned passenger vehicles in Mysore. Delivering certified legal paperwork and transparent pricing directly to local families.</p>
+        <img src="logo.png" alt="CAR MART Logo" style="height: 160px; width: auto; margin-bottom: 1.5rem;">
+        <p>Best pre-owned passenger vehicles in Mysore. Delivering certified legal paperwork and transparent pricing
+          directly to local families.</p>
         <div class="footer-socials">
           <a href="#" class="social-icon"><i class="fa-brands fa-facebook-f"></i></a>
           <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
           <a href="#" class="social-icon"><i class="fa-brands fa-twitter"></i></a>
         </div>
       </div>
-      
+
       <div class="footer-links-col">
         <h4>Showroom Links</h4>
         <ul class="footer-links">
@@ -840,13 +863,16 @@
         <h4>Our Location</h4>
         <div class="footer-map-wrap">
           <!-- Embed Google Maps Bogadi Mysore Location -->
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3898.3496924845564!2d76.6080517757962!3d12.302319087957723!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3baf7ad399999999%3A0xe54e63e26bbbbbbb!2sBogadi%202nd%20Stage%20North%2C%20Mysuru%2C%20Karnataka%20570026!5e0!3m2!1sen!2sin!4v1716123000000!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3898.3496924845564!2d76.6080517757962!3d12.302319087957723!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3baf7ad399999999%3A0xe54e63e26bbbbbbb!2sBogadi%202nd%20Stage%20North%2C%20Mysuru%2C%20Karnataka%20570026!5e0!3m2!1sen!2sin!4v1716123000000!5m2!1sen!2sin"
+            allowfullscreen="" loading="lazy"></iframe>
         </div>
       </div>
     </div>
-    
+
     <div class="container footer-bottom">
-      &copy; 2026 Car Mart Mysore / Best Used Car Mysore. All rights reserved. Handcrafted with NIO official design inspiration.
+      &copy; 2026 Car Mart Mysore / Best Used Car Mysore. All rights reserved. Handcrafted with NIO official design
+      inspiration.
     </div>
   </footer>
 
@@ -862,7 +888,7 @@
         <div class="modal-img-wrap">
           <img id="modal-car-img" src="public/images/swift.png" alt="Car Detail Showcase">
         </div>
-        
+
         <div class="modal-info-list">
           <div class="modal-info-item">
             <span class="modal-info-label">Year</span>
@@ -882,19 +908,24 @@
           </div>
           <div class="modal-info-item">
             <span class="modal-info-label">Status</span>
-            <span class="modal-info-val" id="modal-car-status" style="color: var(--accent-green); font-size: 1.05rem; font-weight: 600;">Available</span>
+            <span class="modal-info-val" id="modal-car-status"
+              style="color: var(--accent-green); font-size: 1.05rem; font-weight: 600;">Available</span>
           </div>
           <div class="modal-info-item">
             <span class="modal-info-label">Warranty</span>
-            <span class="modal-info-val" id="modal-car-warranty" style="color: var(--accent-orange); font-weight: 600;">1-Year Warranty Included</span>
+            <span class="modal-info-val" id="modal-car-warranty"
+              style="color: var(--accent-orange); font-weight: 600;">1-Year Warranty Included</span>
           </div>
-          <div class="modal-info-item" style="border: none; padding-top: 1rem; display: grid; grid-template-columns: 1fr; gap: 0.5rem;">
-            <a href="https://wa.me/919008740899" target="_blank" class="btn-card-whatsapp" id="modal-whatsapp-link"><i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</a>
+          <div class="modal-info-item"
+            style="border: none; padding-top: 1rem; display: grid; grid-template-columns: 1fr; gap: 0.5rem;">
+            <a href="https://wa.me/919008740899" target="_blank" class="btn-card-whatsapp" id="modal-whatsapp-link"><i
+                class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</a>
           </div>
         </div>
-        
+
         <div class="modal-checklist">
-          <h4 class="modal-checklist-title"><i class="fa-solid fa-clipboard-check" style="color: var(--accent-green); margin-right: 0.5rem;"></i> 150-Point Certified Inspection</h4>
+          <h4 class="modal-checklist-title"><i class="fa-solid fa-clipboard-check"
+              style="color: var(--accent-green); margin-right: 0.5rem;"></i> 150-Point Certified Inspection</h4>
           <div class="modal-checklist-grid">
             <div class="modal-check-item"><i class="fa-solid fa-circle-check"></i> Engine Compression OK</div>
             <div class="modal-check-item"><i class="fa-solid fa-circle-check"></i> Gearbox Smooth Shift</div>
@@ -917,8 +948,11 @@
       <button class="modal-close" onclick="closeSuccessModal()"><i class="fa-solid fa-xmark"></i></button>
       <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
       <h3 class="modal-title" style="margin-bottom: 0.75rem;">Valuation Received!</h3>
-      <p id="success-message" style="color: var(--text-muted); margin-bottom: 2rem;">We have calculated an estimated price range for your vehicle. Our team will contact you shortly.</p>
-      <button class="btn-card-detail" style="background: var(--primary); color: #FFF; border-color: var(--primary); width: 100%;" onclick="closeSuccessModal()">Great, Thank You</button>
+      <p id="success-message" style="color: var(--text-muted); margin-bottom: 2rem;">We have calculated an estimated
+        price range for your vehicle. Our team will contact you shortly.</p>
+      <button class="btn-card-detail"
+        style="background: var(--primary); color: #FFF; border-color: var(--primary); width: 100%;"
+        onclick="closeSuccessModal()">Great, Thank You</button>
     </div>
   </div>
 
@@ -928,4 +962,5 @@
   <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
   <script src="main.js"></script>
 </body>
+
 </html>
