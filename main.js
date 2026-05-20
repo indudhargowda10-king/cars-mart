@@ -628,26 +628,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (loaderBg) {
     const movingCar = loaderBg.querySelector(".cm-moving-car");
     const fullLogo = loaderBg.querySelector(".cm-full-logo");
-    const progressFill = loaderBg.querySelector(".cm-progress-fill");
-    const progressText = document.getElementById("cm-progress-val");
 
-    let progress = 0;
-    const duration = 3000; // 3 seconds matching the CSS animation
-    const intervalTime = 30; // update every 30ms
-
-    // 1. Start car animation and progress bar
+    // 1. Start car animation
     setTimeout(() => {
       if (movingCar) movingCar.classList.add("cm-drive-animation");
-      
-      const interval = setInterval(() => {
-        progress += (100 / (duration / intervalTime));
-        if (progress >= 100) {
-          progress = 100;
-          clearInterval(interval);
-        }
-        if (progressFill) progressFill.style.width = `${progress}%`;
-        if (progressText) progressText.innerText = `${Math.floor(progress)}%`;
-      }, intervalTime);
     }, 200);
 
     // 2. Wait for car to finish driving (3s), then reveal logo
