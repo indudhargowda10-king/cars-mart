@@ -626,6 +626,12 @@ function filterGallery(category, buttonEl) {
 document.addEventListener("DOMContentLoaded", () => {
   const loaderBg = document.getElementById("cm-loader-bg");
   if (loaderBg) {
+    if (sessionStorage.getItem("cmLoaderSeen")) {
+      loaderBg.remove();
+      return;
+    }
+    sessionStorage.setItem("cmLoaderSeen", "true");
+
     const movingCar = loaderBg.querySelector(".cm-moving-car");
     const fullLogo = loaderBg.querySelector(".cm-full-logo");
 
