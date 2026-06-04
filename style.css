@@ -165,6 +165,52 @@ a {
   color: var(--accent-orange);
 }
 
+.logo-link {
+  position: relative;
+  height: 50px;
+  width: 250px;
+  display: block;
+}
+
+.logo-img {
+  height: 220px;
+  width: auto;
+  position: absolute;
+  top: -75px;
+  left: 0;
+  z-index: 1001;
+  pointer-events: none;
+  transition: var(--transition-smooth);
+}
+
+@media (max-width: 991px) {
+  .logo-link {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-link {
+    width: 150px;
+    height: 40px;
+  }
+  .logo-img {
+    height: 140px;
+    top: -46px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-link {
+    width: 120px;
+    height: 32px;
+  }
+  .logo-img {
+    height: 110px;
+    top: -38px;
+  }
+}
+
 /* Scrolled Navbar Override logo/links */
 #navbar.scrolled .logo, #navbar.scrolled .nav-link {
   color: var(--text-dark);
@@ -287,6 +333,32 @@ a {
 .btn-nav-solid:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+@media (max-width: 768px) {
+  .nav-ctas {
+    gap: 0.6rem;
+  }
+  .btn-nav {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-ctas {
+    gap: 0.4rem;
+  }
+  .btn-nav {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+    gap: 0.3rem;
+  }
+  .theme-toggle-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+  }
 }
 
 /* Make the parent item relative so the dropdown aligns to it */
