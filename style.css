@@ -168,15 +168,15 @@ a {
 .logo-link {
   position: relative;
   height: 50px;
-  width: 250px;
+  width: 270px; /* Perfectly sized to accommodate the logo width (180 * 1.5) without overlapping links */
   display: block;
 }
 
 .logo-img {
-  height: 220px;
+  height: 180px; /* Elegant slightly reduced desktop size to prevent link collision */
   width: auto;
   position: absolute;
-  top: -75px;
+  top: -60px; /* Vertically centered for the 180px height */
   left: 0;
   z-index: 1001;
   pointer-events: none;
@@ -185,29 +185,33 @@ a {
 
 @media (max-width: 991px) {
   .logo-link {
-    width: 200px;
+    width: 240px; /* Width exactly matches 160 * 1.5 */
+  }
+  .logo-img {
+    height: 160px;
+    top: -55px;
   }
 }
 
 @media (max-width: 768px) {
   .logo-link {
-    width: 150px;
+    width: 165px; /* Width exactly matches 110 * 1.5 to eliminate button overlap */
     height: 40px;
   }
   .logo-img {
-    height: 140px;
-    top: -46px;
+    height: 110px;
+    top: -35px;
   }
 }
 
 @media (max-width: 480px) {
   .logo-link {
-    width: 120px;
+    width: 135px; /* Width exactly matches 90 * 1.5 to leave maximum room for CTA buttons */
     height: 32px;
   }
   .logo-img {
-    height: 110px;
-    top: -38px;
+    height: 90px;
+    top: -28px;
   }
 }
 
@@ -358,6 +362,20 @@ a {
     width: 36px;
     height: 36px;
     font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 380px) {
+  /* On extremely narrow screens, hide text in navbar CTA buttons and show only the icons to guarantee zero wrapping */
+  .btn-nav .btn-text {
+    display: none;
+  }
+  .btn-nav {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.85rem;
+  }
+  .nav-ctas {
+    gap: 0.3rem;
   }
 }
 
