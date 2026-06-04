@@ -1,14 +1,31 @@
 /* Admin Panel Custom Styles */
 :root {
-  --admin-bg: #030712;
-  --admin-card: rgba(17, 24, 39, 0.7);
-  --admin-border: rgba(255, 255, 255, 0.1);
   --admin-primary: #F97316;
   --admin-primary-hover: #EA580C;
   --admin-danger: #EF4444;
   --admin-danger-hover: #DC2626;
+}
+
+/* Dark Theme (Default for Admin) */
+:root, html[data-theme="dark"] {
+  --admin-bg: #030712;
+  --admin-card: rgba(17, 24, 39, 0.7);
+  --admin-border: rgba(255, 255, 255, 0.1);
   --admin-text: #F3F4F6;
   --admin-muted: #9CA3AF;
+  --admin-glass-bg: rgba(17, 24, 39, 0.85);
+  --admin-input-bg: rgba(0, 0, 0, 0.2);
+}
+
+/* Light Theme for Admin */
+html[data-theme="light"] {
+  --admin-bg: #F3F4F6;
+  --admin-card: #FFFFFF;
+  --admin-border: #E5E7EB;
+  --admin-text: #1F2937;
+  --admin-muted: #6B7280;
+  --admin-glass-bg: rgba(255, 255, 255, 0.85);
+  --admin-input-bg: #F9FAFB;
 }
 
 body {
@@ -17,6 +34,14 @@ body {
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
+}
+
+/* Smooth transitions when switching themes */
+body, .admin-nav, .admin-section, .form-group input, .form-group select, .inventory-table th, .inventory-table td, .btn-outline, .login-card {
+  transition: background-color 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              border-color 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              color 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              box-shadow 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 /* Typography & Utils */
@@ -83,7 +108,7 @@ h2, h3, h4 { margin: 0; font-weight: 600; }
   font-weight: 500;
 }
 .form-group input, .form-group select {
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--admin-input-bg);
   border: 1px solid var(--admin-border);
   padding: 0.75rem;
   border-radius: 8px;
@@ -140,7 +165,7 @@ h2, h3, h4 { margin: 0; font-weight: 600; }
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: rgba(17, 24, 39, 0.8);
+  background: var(--admin-glass-bg);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--admin-border);
   position: sticky;

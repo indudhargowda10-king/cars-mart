@@ -821,3 +821,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 5000);
   }
 });
+
+/* ==========================================================================
+   11. LIGHT & DARK THEME TOGGLE LOGIC
+   ========================================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  if (themeToggleBtn) {
+    const icon = themeToggleBtn.querySelector('i');
+    
+    // Function to update icon based on active theme
+    const updateThemeIcon = (theme) => {
+      if (theme === 'dark') {
+        if (icon) {
+          icon.className = 'fa-solid fa-sun';
+        }
+      } else {
+        if (icon) {
+          icon.className = 'fa-solid fa-moon';
+        }
+      }
+    };
+
+    // Initialize icon based on current document theme
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    updateThemeIcon(currentTheme);
+
+    // Toggle theme on click
+    themeToggleBtn.addEventListener('click', () => {
+      const activeTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('cm_theme', newTheme);
+      updateThemeIcon(newTheme);
+    });
+  }
+});

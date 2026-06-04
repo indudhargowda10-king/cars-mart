@@ -4,6 +4,14 @@
    1. DESIGN SYSTEM & VARIABLES
    ========================================================================== */
 :root {
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Outfit', sans-serif;
+  --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  --white: #FFFFFF;
+}
+
+/* Light Theme Variables */
+:root, html[data-theme="light"] {
   --primary: #0B1F3A;         /* Deep Navy Blue */
   --accent-orange: #F97316;   /* Energetic Orange */
   --accent-green: #16A34A;    /* Trustworthy Green */
@@ -13,12 +21,31 @@
   --text-dark: #111827;       /* Charcoal Black */
   --text-muted: #4B5563;      /* Muted Slate Grey */
   --border-color: #E5E7EB;    /* Thin Light Border */
-  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg: rgba(255, 255, 255, 0.75);
   --glass-border: rgba(255, 255, 255, 0.4);
-  
-  --font-sans: 'Inter', sans-serif;
-  --font-display: 'Outfit', sans-serif;
-  --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Premium Midnight Dark Theme Variables */
+html[data-theme="dark"] {
+  --primary: #93C5FD;         /* Soft Glowing Accent Blue */
+  --accent-orange: #FB923C;   /* Radiant Sunset Orange */
+  --accent-green: #4ADE80;    /* Bright Mint Green */
+  --bg-light: #0B1120;        /* Deep Space Midnight Blue */
+  --card-bg: #151F32;         /* Polished Obsidian Navy Card */
+  --black-grid: #020617;      /* True Void Dark Grid */
+  --text-dark: #F3F4F6;       /* Bright Soft Grey / Ice White */
+  --text-muted: #9CA3AF;      /* Soft Muted Grey */
+  --border-color: #1F2937;    /* Slate Shadow Border */
+  --glass-bg: rgba(21, 31, 50, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.12);
+}
+
+/* Smooth transitions when switching themes */
+body, header, section, footer, .card, .gallery-item, .modal-card, .btn-nav, .form-group input, .form-group select, .mega-menu, #navbar, .theme-toggle-btn {
+  transition: background-color 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              border-color 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              color 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              box-shadow 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 /* ==========================================================================
@@ -109,13 +136,13 @@ a {
 }
 
 #navbar.scrolled {
-  background: rgba(5, 11, 20, 0.85); /* Darker glassmorphism on scroll */
+  background: var(--glass-bg);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   padding: 0.6rem 0;
-  color: #FFFFFF;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-dark);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .nav-container {
@@ -139,8 +166,38 @@ a {
 }
 
 /* Scrolled Navbar Override logo/links */
-#navbar.scrolled .logo {
-  color: #FFFFFF;
+#navbar.scrolled .logo, #navbar.scrolled .nav-link {
+  color: var(--text-dark);
+}
+
+/* Premium Theme Toggle Button */
+.theme-toggle-btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-dark);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 1.1rem;
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.1) rotate(20deg);
+  background: var(--accent-orange);
+  color: var(--white);
+  border-color: var(--accent-orange);
+  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.3);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.95);
 }
 
 .nav-links {

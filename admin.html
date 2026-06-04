@@ -8,6 +8,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="admin.css">
+  <!-- Theme Blocking Loader Script to Prevent FOUC -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('cm_theme');
+      if (theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 </head>
 <body>
   <!-- Login Screen -->
@@ -40,6 +51,9 @@
         <span>Admin Panel</span>
       </div>
       <div class="admin-nav-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme" style="margin-right: 0.5rem; width: 38px; height: 38px; font-size: 0.95rem;">
+          <i class="fa-solid fa-sun"></i>
+        </button>
         <a href="index.html" class="btn-outline"><i class="fa-solid fa-arrow-left"></i> Back to Site</a>
         <button id="logout-btn" class="btn-outline"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
       </div>
