@@ -3,6 +3,36 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const db = require('./db');
+const multer = require('multer');
+
+// Configure multer for image uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = /jpeg|jpg|png/;
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only .png, .jpg and .jpeg format allowed!'), false);
+  }
+};
+
+const upload = multer({ 
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,8 +41,23 @@ app.use(cors());
 app.use(express.json());
 // Serve static files from the current directory
 app.use(express.static(__dirname));
+// Serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // API endpoints
+app.post('/api/upload', upload.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded or invalid format.' });
+    }
+    // Return the relative path so the frontend can store it in the DB
+    res.json({ success: true, imageUrl: `/uploads/${req.file.filename}` });
+  } catch (err) {
+    console.error('Error uploading file:', err);
+    res.status(500).json({ success: false, message: 'Server error during file upload.' });
+  }
+});
+
 app.get('/api/cars', async (req, res) => {
   try {
     const result = await db.query('SELECT * FROM cars ORDER BY id DESC');

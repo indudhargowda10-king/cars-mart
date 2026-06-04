@@ -97,19 +97,47 @@ async function renderAdminCars() {
 document.getElementById("add-car-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   
-  const newCar = {
-    brand: document.getElementById("car-brand").value,
-    model: document.getElementById("car-model").value,
-    category: document.getElementById("car-category").value,
-    year: parseInt(document.getElementById("car-year").value),
-    km: document.getElementById("car-km").value,
-    fuel: document.getElementById("car-fuel").value,
-    transmission: document.getElementById("car-transmission").value,
-    ownership: document.getElementById("car-ownership").value,
-    image: document.getElementById("car-image").value
-  };
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+  submitBtn.disabled = true;
 
   try {
+    // 1. Upload the image first
+    const fileInput = document.getElementById("car-image-upload");
+    if (fileInput.files.length === 0) {
+      alert("Please select an image to upload.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", fileInput.files[0]);
+
+    const uploadRes = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData
+    });
+    const uploadData = await uploadRes.json();
+
+    if (!uploadRes.ok || !uploadData.success) {
+      throw new Error(uploadData.message || 'Image upload failed');
+    }
+
+    const imageUrl = uploadData.imageUrl;
+
+    // 2. Add the car with the returned image URL
+    const newCar = {
+      brand: document.getElementById("car-brand").value,
+      model: document.getElementById("car-model").value,
+      category: document.getElementById("car-category").value,
+      year: parseInt(document.getElementById("car-year").value),
+      km: document.getElementById("car-km").value,
+      fuel: document.getElementById("car-fuel").value,
+      transmission: document.getElementById("car-transmission").value,
+      ownership: document.getElementById("car-ownership").value,
+      image: imageUrl
+    };
+
     const res = await fetch('/api/cars', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -125,7 +153,10 @@ document.getElementById("add-car-form").addEventListener("submit", async (e) => 
     }
   } catch (err) {
     console.error(err);
-    alert("Server error adding car.");
+    alert(err.message || "Server error adding car.");
+  } finally {
+    submitBtn.innerHTML = originalBtnText;
+    submitBtn.disabled = false;
   }
 });
 
