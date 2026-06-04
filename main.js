@@ -143,99 +143,31 @@ animateHeroEntrance();
 /* ==========================================================================
    3. VEHICLE INVENTORY DATA (8 PREMIUM PRE-OWNED VEHICLES)
    ========================================================================== */
-const carsData = [
-  {
-    id: 1,
-    brand: "Toyota",
-    model: "Fortuner 2.8 4x2",
-    category: "SUV",
-    year: 2020,
-    km: "45,000 km",
-    fuel: "Diesel",
-    transmission: "Automatic",
-    image: "public/images/fortuner.png"
-  },
-  {
-    id: 2,
-    brand: "Toyota",
-    model: "Glanza V",
-    category: "Hatchback",
-    year: 2022,
-    km: "15,000 km",
-    fuel: "Petrol",
-    transmission: "Automatic",
-    image: "public/images/glanza.png"
-  },
-  {
-    id: 3,
-    brand: "Toyota",
-    model: "Innova Crysta 2.4 GX",
-    category: "MUV",
-    year: 2020,
-    km: "65,000 km",
-    fuel: "Diesel",
-    transmission: "Manual",
-    image: "public/images/innova.png"
-  },
-  {
-    id: 4,
-    brand: "Tata",
-    model: "Harrier XZ+",
-    category: "SUV",
-    year: 2022,
-    km: "22,000 km",
-    fuel: "Diesel",
-    transmission: "Manual",
-    image: "public/images/harrier.png"
-  },
-  {
-    id: 5,
-    brand: "Hyundai",
-    model: "Creta SX",
-    category: "SUV",
-    year: 2021,
-    km: "34,200 km",
-    fuel: "Petrol",
-    transmission: "Manual",
-    image: "public/images/creta.png"
-  },
-  {
-    id: 6,
-    brand: "Hyundai",
-    model: "Verna SX(O)",
-    category: "Sedan",
-    year: 2021,
-    km: "32,000 km",
-    fuel: "Petrol",
-    transmission: "Manual",
-    image: "public/images/verna.png"
-  },
-  {
-    id: 7,
-    brand: "Honda",
-    model: "City V MT",
-    category: "Sedan",
-    year: 2019,
-    km: "41,000 km",
-    fuel: "Petrol",
-    transmission: "Manual",
-    image: "public/images/city.png"
-  },
-  {
-    id: 8,
-    brand: "Mahindra",
-    model: "XUV500 W7",
-    category: "SUV",
-    year: 2018,
-    km: "72,000 km",
-    fuel: "Diesel",
-    transmission: "Manual",
-    image: "public/images/xuv500.png"
-  }
-];
+let carsData = [];
 
 // Active Filters State
-let currentFilteredCars = [...carsData];
+let currentFilteredCars = [];
+
+async function loadCars() {
+  try {
+    const response = await fetch('/api/cars');
+    if (response.ok) {
+      carsData = await response.json();
+    } else {
+      carsData = [];
+    }
+  } catch (error) {
+    console.error("Failed to load cars from backend", error);
+    carsData = [];
+  }
+  currentFilteredCars = [...carsData];
+  renderCarsGrid(carsData);
+  renderSliderCars();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadCars();
+});
 
 /* ==========================================================================
    4. RENDER MARKETPLACE GRID CARDS
@@ -291,9 +223,6 @@ function renderCarsGrid(carsList) {
   
   // Car-card entrance is handled by CSS @keyframes fadeInUp
 }
-
-// Initial Grid Render
-renderCarsGrid(carsData);
 
 /* ==========================================================================
    5. SEARCH FILTER LOGIC
@@ -369,9 +298,75 @@ function updateFilterPills(activeCategory) {
    6. WHITE CAR SLIDER LOGIC
    ========================================================================== */
 let activeSlideIndex = 0;
-const slides = document.querySelectorAll(".slide");
-const dots = document.querySelectorAll(".slider-dot");
+let slides = document.querySelectorAll(".slide");
+let dots = document.querySelectorAll(".slider-dot");
 let isSliderTransitioning = false;
+
+function renderSliderCars() {
+  const viewport = document.getElementById("slider-viewport");
+  const dotsContainer = document.getElementById("slider-dots");
+  if (!viewport || !dotsContainer) return;
+  
+  viewport.innerHTML = "";
+  dotsContainer.innerHTML = "";
+  
+  const sliderCars = carsData.slice(0, 5); // Show up to 5 cars
+  
+  if (sliderCars.length === 0) {
+    viewport.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem;"><p style="color: var(--text-muted);">No cars available for highlight.</p></div>`;
+    return;
+  }
+  
+  sliderCars.forEach((car, index) => {
+    // Build Slide
+    const slide = document.createElement("div");
+    slide.className = `slide ${index === 0 ? "active" : ""}`;
+    slide.setAttribute("data-index", index);
+    
+    slide.innerHTML = `
+      <div class="slide-content-left">
+        <h3 class="slide-car-name">${car.brand} ${car.model}</h3>
+        <span class="slide-car-badge" style="display: inline-block; background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); font-size: 0.85rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 9999px; margin-bottom: 1rem;">
+          <i class="fa-solid fa-certificate"></i> Certified Premium
+        </span>
+        <div class="slide-specs-grid">
+          <div class="slide-spec-item">
+            <span class="slide-spec-label">Year</span>
+            <span class="slide-spec-value">${car.year}</span>
+          </div>
+          <div class="slide-spec-item">
+            <span class="slide-spec-label">KMs Driven</span>
+            <span class="slide-spec-value">${car.km}</span>
+          </div>
+          <div class="slide-spec-item">
+            <span class="slide-spec-label">Fuel</span>
+            <span class="slide-spec-value">${car.fuel}</span>
+          </div>
+          <div class="slide-spec-item">
+            <span class="slide-spec-label">Transmission</span>
+            <span class="slide-spec-value">${car.transmission}</span>
+          </div>
+        </div>
+        <button class="btn-slide-detail" onclick="triggerCarModal(${car.id})">View Details <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+      <div class="slide-image-right">
+        <img src="${car.image}" alt="${car.brand} ${car.model}" onerror="this.src='logo2.png'">
+      </div>
+    `;
+    viewport.appendChild(slide);
+    
+    // Build Dot
+    const dot = document.createElement("button");
+    dot.className = `slider-dot ${index === 0 ? "active" : ""}`;
+    dot.onclick = () => slideTo(index);
+    dotsContainer.appendChild(dot);
+  });
+  
+  // Re-query slides and dots
+  slides = document.querySelectorAll(".slide");
+  dots = document.querySelectorAll(".slider-dot");
+  activeSlideIndex = 0;
+}
 
 function slideTo(index) {
   if (isSliderTransitioning || index === activeSlideIndex || !slides.length) return;
@@ -484,6 +479,8 @@ function triggerCarModal(carId) {
   document.getElementById("modal-car-km").innerText = car.km;
   document.getElementById("modal-car-fuel").innerText = car.fuel;
   document.getElementById("modal-car-transmission").innerText = car.transmission;
+  const ownershipEl = document.getElementById("modal-car-ownership");
+  if (ownershipEl) ownershipEl.innerText = car.ownership || "1st Owner";
   
   const statusEl = document.getElementById("modal-car-status");
   const warrantyEl = document.getElementById("modal-car-warranty");

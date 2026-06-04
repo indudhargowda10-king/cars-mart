@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Mart Admin Panel</title>
+  <link rel="icon" type="image/png" href="logo2.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <!-- Login Screen -->
+  <div class="admin-login-wrapper" id="login-screen">
+    <div class="login-card">
+      <img src="logo2.png" alt="Car Mart" class="login-logo">
+      <h2>Admin Login</h2>
+      <p class="login-subtitle">Enter your credentials to manage inventory</p>
+      
+      <form id="login-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="admin" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="admin" required>
+        </div>
+        <p class="error-msg" id="login-error">Invalid credentials</p>
+        <button type="submit" class="btn-primary w-100">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard Screen -->
+  <div class="admin-dashboard" id="dashboard-screen" style="display: none;">
+    <nav class="admin-nav">
+      <div class="admin-nav-brand">
+        <img src="logo2.png" alt="Logo">
+        <span>Admin Panel</span>
+      </div>
+      <div class="admin-nav-actions">
+        <a href="index.html" class="btn-outline"><i class="fa-solid fa-arrow-left"></i> Back to Site</a>
+        <button id="logout-btn" class="btn-outline"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+      </div>
+    </nav>
+
+    <div class="admin-content container">
+      <!-- Add Car Form -->
+      <section class="admin-section add-car-section">
+        <div class="section-header">
+          <h3><i class="fa-solid fa-plus-circle"></i> Add New Car</h3>
+        </div>
+        
+        <form id="add-car-form" class="add-car-grid">
+          <div class="form-group">
+            <label>Brand</label>
+            <input type="text" id="car-brand" placeholder="e.g. Toyota" required>
+          </div>
+          <div class="form-group">
+            <label>Model</label>
+            <input type="text" id="car-model" placeholder="e.g. Fortuner 2.8 4x2" required>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="car-category" required>
+              <option value="Hatchback">Hatchback</option>
+              <option value="Sedan">Sedan</option>
+              <option value="SUV">SUV</option>
+              <option value="MUV">MUV</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Year</label>
+            <input type="number" id="car-year" placeholder="e.g. 2022" required>
+          </div>
+          <div class="form-group">
+            <label>KMs Driven</label>
+            <input type="text" id="car-km" placeholder="e.g. 15,000 km" required>
+          </div>
+          <div class="form-group">
+            <label>Fuel Type</label>
+            <select id="car-fuel" required>
+              <option value="Petrol">Petrol</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Electric">Electric</option>
+              <option value="Hybrid">Hybrid</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Transmission</label>
+            <select id="car-transmission" required>
+              <option value="Manual">Manual</option>
+              <option value="Automatic">Automatic</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Ownership</label>
+            <select id="car-ownership" required>
+              <option value="1st Owner">1st Owner</option>
+              <option value="2nd Owner">2nd Owner</option>
+              <option value="3rd Owner">3rd Owner</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label>Image URL (or local path)</label>
+            <input type="text" id="car-image" placeholder="public/images/car-name.png or https://..." required>
+          </div>
+          <div class="form-group full-width">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Car to Inventory</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Inventory List -->
+      <section class="admin-section inventory-section">
+        <div class="section-header">
+          <h3><i class="fa-solid fa-list"></i> Current Inventory</h3>
+          <span class="inventory-count" id="inventory-count">0 Cars</span>
+        </div>
+        
+        <div class="inventory-table-wrapper">
+          <table class="inventory-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Brand / Model</th>
+                <th>Year</th>
+                <th>KMs</th>
+                <th>Ownership</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
