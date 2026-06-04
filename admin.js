@@ -142,13 +142,42 @@ document.getElementById("add-car-form").addEventListener("submit", async (e) => 
     const fileInput = document.getElementById("car-image-upload");
     if (fileInput.files.length === 0) {
       alert("Please select at least one image to upload.");
+      submitBtn.innerHTML = originalBtnText;
+      submitBtn.disabled = false;
       return;
     }
 
     const formData = new FormData();
     for (let i = 0; i < fileInput.files.length; i++) {
-      formData.append("images", fileInput.files[i]);
+      const file = fileInput.files[i];
+      const nameLower = file.name.toLowerCase();
+      if (nameLower.endsWith(".heic") || nameLower.endsWith(".heif")) {
+        if (typeof heic2any === "undefined") {
+          alert("Apple Photo converter is still loading or could not be loaded. Please check your internet connection and try again.");
+          submitBtn.innerHTML = originalBtnText;
+          submitBtn.disabled = false;
+          return;
+        }
+        try {
+          submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Converting Apple Photo ${i+1}...`;
+          const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.85 });
+          const jpegBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+          const newFileName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
+          const convertedFile = new File([jpegBlob], newFileName, { type: "image/jpeg" });
+          formData.append("images", convertedFile);
+        } catch (convErr) {
+          console.error("HEIC conversion error: ", convErr);
+          alert(`Failed to convert Apple Photo "${file.name}". It might be corrupted. Please try converting it on your device first.`);
+          submitBtn.innerHTML = originalBtnText;
+          submitBtn.disabled = false;
+          return;
+        }
+      } else {
+        formData.append("images", file);
+      }
     }
+
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
 
     const uploadRes = await fetch('/api/upload', {
       method: 'POST',

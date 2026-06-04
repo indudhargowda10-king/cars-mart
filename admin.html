@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="admin.css">
+  <!-- Client-side HEIC/HEIF Image Conversion Library -->
+  <script src="https://cdn.jsdelivr.net/npm/heic2any/dist/heic2any.min.js"></script>
   <!-- Theme Blocking Loader Script to Prevent FOUC -->
   <script>
     (function() {
@@ -118,8 +120,8 @@
             </select>
           </div>
           <div class="form-group full-width">
-            <label>Upload Car Images (.jpg, .jpeg, .png) — Select Multiple (Different Angles)</label>
-            <input type="file" id="car-image-upload" accept=".jpg, .jpeg, .png" multiple required>
+            <label>Upload Car Images (.jpg, .jpeg, .png, .heic, .heif) — Select Multiple (Different Angles)</label>
+            <input type="file" id="car-image-upload" accept=".jpg, .jpeg, .png, .heic, .heif, image/heic, image/heif" multiple required>
           </div>
           <div class="form-group full-width">
             <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Car to Inventory</button>
