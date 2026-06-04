@@ -4,6 +4,13 @@ const cors = require('cors');
 const path = require('path');
 const db = require('./db');
 const multer = require('multer');
+const fs = require('fs');
+
+// Ensure uploads directory exists
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Configure multer for image uploads
 const storage = multer.diskStorage({
