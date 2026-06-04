@@ -116,7 +116,7 @@ app.delete('/api/cars/:id', async (req, res) => {
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   // Simple authentication for showcase
-  if (username === 'admin' && password === 'admin') {
+  if (username === 'carmart' && password === '9008740899') {
     res.json({ success: true, token: 'fake-jwt-token' });
   } else {
     res.status(401).json({ success: false, message: 'Invalid credentials' });
