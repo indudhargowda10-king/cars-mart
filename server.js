@@ -53,7 +53,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // API endpoints
 app.post('/api/upload', (req, res, next) => {
-  upload.single('image')(req, res, function (err) {
+  upload.array('images', 10)(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       // A Multer error occurred when uploading.
       return res.status(400).json({ success: false, message: err.message });
@@ -66,14 +66,15 @@ app.post('/api/upload', (req, res, next) => {
   });
 }, (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: 'No file uploaded or invalid format.' });
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ success: false, message: 'No files uploaded or invalid format.' });
     }
-    // Return the relative path so the frontend can store it in the DB
-    res.json({ success: true, imageUrl: `/uploads/${req.file.filename}` });
+    // Return the relative paths so the frontend can store them in the DB
+    const imageUrls = req.files.map(file => `/uploads/${file.filename}`);
+    res.json({ success: true, imageUrls: imageUrls });
   } catch (err) {
-    console.error('Error uploading file:', err);
-    res.status(500).json({ success: false, message: 'Server error during file upload.' });
+    console.error('Error uploading files:', err);
+    res.status(500).json({ success: false, message: 'Server error during files upload.' });
   }
 });
 
@@ -88,11 +89,11 @@ app.get('/api/cars', async (req, res) => {
 });
 
 app.post('/api/cars', async (req, res) => {
-  const { brand, model, category, year, km, fuel, transmission, ownership, image } = req.body;
+  const { brand, model, category, year, km, fuel, transmission, ownership, image, images } = req.body;
   try {
     const result = await db.query(
-      'INSERT INTO cars (brand, model, category, year, km, fuel, transmission, ownership, image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
-      [brand, model, category, year, km, fuel, transmission, ownership, image]
+      'INSERT INTO cars (brand, model, category, year, km, fuel, transmission, ownership, image, images) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
+      [brand, model, category, year, km, fuel, transmission, ownership, image, images]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {

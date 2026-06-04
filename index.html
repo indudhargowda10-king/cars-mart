@@ -532,8 +532,15 @@
       <button class="modal-close" onclick="closeCarModal()"><i class="fa-solid fa-xmark"></i></button>
       <h3 class="modal-title" id="modal-car-name">Maruti Suzuki Swift</h3>
       <div class="modal-body-grid">
-        <div class="modal-img-wrap">
-          <img id="modal-car-img" src="public/images/swift.png" alt="Car Detail Showcase">
+        <div class="modal-gallery-wrap">
+          <div class="modal-img-wrap">
+            <button class="gallery-nav-btn prev-btn" onclick="prevModalImage()"><i class="fa-solid fa-chevron-left"></i></button>
+            <img id="modal-car-img" src="public/images/swift.png" alt="Car Detail Showcase" onerror="this.src='logo2.png'">
+            <button class="gallery-nav-btn next-btn" onclick="nextModalImage()"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+          <div class="modal-thumbnails-strip" id="modal-thumbnails-container">
+            <!-- Rendered dynamically via JS -->
+          </div>
         </div>
 
         <div class="modal-info-list">

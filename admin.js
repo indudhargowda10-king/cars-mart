@@ -103,15 +103,17 @@ document.getElementById("add-car-form").addEventListener("submit", async (e) => 
   submitBtn.disabled = true;
 
   try {
-    // 1. Upload the image first
+    // 1. Upload the images first
     const fileInput = document.getElementById("car-image-upload");
     if (fileInput.files.length === 0) {
-      alert("Please select an image to upload.");
+      alert("Please select at least one image to upload.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("image", fileInput.files[0]);
+    for (let i = 0; i < fileInput.files.length; i++) {
+      formData.append("images", fileInput.files[i]);
+    }
 
     const uploadRes = await fetch('/api/upload', {
       method: 'POST',
@@ -123,9 +125,11 @@ document.getElementById("add-car-form").addEventListener("submit", async (e) => 
       throw new Error(uploadData.message || 'Image upload failed');
     }
 
-    const imageUrl = uploadData.imageUrl;
+    const imageUrls = uploadData.imageUrls;
+    const primaryImageUrl = imageUrls[0];
+    const imagesJsonString = JSON.stringify(imageUrls);
 
-    // 2. Add the car with the returned image URL
+    // 2. Add the car with the returned image URLs
     const newCar = {
       brand: document.getElementById("car-brand").value,
       model: document.getElementById("car-model").value,
@@ -135,7 +139,8 @@ document.getElementById("add-car-form").addEventListener("submit", async (e) => 
       fuel: document.getElementById("car-fuel").value,
       transmission: document.getElementById("car-transmission").value,
       ownership: document.getElementById("car-ownership").value,
-      image: imageUrl
+      image: primaryImageUrl,
+      images: imagesJsonString
     };
 
     const res = await fetch('/api/cars', {

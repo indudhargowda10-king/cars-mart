@@ -536,12 +536,54 @@ function closeSuccessModal() {
 /* ==========================================================================
    8. CAR DETAILS SPEC MODAL
    ========================================================================== */
+let modalImages = [];
+let currentModalImgIndex = 0;
+
+function updateModalImage(index) {
+  if (modalImages.length === 0) return;
+  
+  // Wrap index if out of bounds
+  if (index < 0) {
+    currentModalImgIndex = modalImages.length - 1;
+  } else if (index >= modalImages.length) {
+    currentModalImgIndex = 0;
+  } else {
+    currentModalImgIndex = index;
+  }
+  
+  // Update image src
+  const modalImg = document.getElementById("modal-car-img");
+  if (modalImg) {
+    modalImg.src = modalImages[currentModalImgIndex];
+  }
+  
+  // Update active status on thumbnails
+  const thumbs = document.querySelectorAll(".modal-thumb-item");
+  thumbs.forEach((thumb, i) => {
+    if (i === currentModalImgIndex) {
+      thumb.classList.add("active");
+      // Scroll thumbnail into view inside the container if needed
+      thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    } else {
+      thumb.classList.remove("active");
+    }
+  });
+}
+
+function prevModalImage() {
+  updateModalImage(currentModalImgIndex - 1);
+}
+
+function nextModalImage() {
+  updateModalImage(currentModalImgIndex + 1);
+}
+
 function triggerCarModal(carId) {
   const car = carsData.find(c => c.id === carId);
   if (!car) return;
   
   document.getElementById("modal-car-name").innerText = `${car.brand} ${car.model}`;
-  document.getElementById("modal-car-img").src = car.image;
+  
   document.getElementById("modal-car-year").innerText = car.year;
   document.getElementById("modal-car-km").innerText = car.km;
   document.getElementById("modal-car-fuel").innerText = car.fuel;
@@ -554,6 +596,60 @@ function triggerCarModal(carId) {
   if (statusEl) statusEl.innerText = "Available";
   if (warrantyEl) warrantyEl.innerText = "1-Year Warranty Included";
   
+  // Parse images if available, otherwise fallback to single image array
+  try {
+    modalImages = car.images ? JSON.parse(car.images) : [car.image];
+  } catch (err) {
+    console.error("Error parsing images array", err);
+    modalImages = [car.image];
+  }
+  
+  // Filter out any null, empty, or undefined entries
+  modalImages = modalImages.filter(img => img && img.trim() !== "");
+  
+  // If array is empty, push the primary image or a placeholder
+  if (modalImages.length === 0) {
+    modalImages.push(car.image || 'logo2.png');
+  }
+  
+  currentModalImgIndex = 0;
+
+  const thumbContainer = document.getElementById("modal-thumbnails-container");
+  if (thumbContainer) {
+    thumbContainer.innerHTML = "";
+    
+    // Hide thumbnails and navigation buttons if there is only 1 image
+    const prevBtn = document.querySelector(".gallery-nav-btn.prev-btn");
+    const nextBtn = document.querySelector(".gallery-nav-btn.next-btn");
+    
+    if (modalImages.length <= 1) {
+      if (prevBtn) prevBtn.style.display = "none";
+      if (nextBtn) nextBtn.style.display = "none";
+      thumbContainer.style.display = "none";
+    } else {
+      if (prevBtn) prevBtn.style.display = "flex";
+      if (nextBtn) nextBtn.style.display = "flex";
+      thumbContainer.style.display = "flex";
+      
+      modalImages.forEach((imgSrc, idx) => {
+        const thumb = document.createElement("div");
+        thumb.className = `modal-thumb-item ${idx === 0 ? 'active' : ''}`;
+        thumb.setAttribute("onclick", `updateModalImage(${idx})`);
+        
+        const img = document.createElement("img");
+        img.src = imgSrc;
+        img.alt = `Angle ${idx + 1}`;
+        img.onerror = function() { this.src = 'logo2.png'; };
+        
+        thumb.appendChild(img);
+        thumbContainer.appendChild(thumb);
+      });
+    }
+  }
+  
+  // Update active image to index 0
+  updateModalImage(0);
+
   // Custom WhatsApp message (no price references)
   const waMessage = `Hi Car Mart, I am interested in the verified used ${car.brand} ${car.model} (${car.year}). Please share availability and details.`;
   const waLink = document.getElementById("modal-whatsapp-link");

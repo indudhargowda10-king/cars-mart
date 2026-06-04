@@ -116,6 +116,11 @@ async function initDB() {
       );
     `);
 
+    // Ensure table has multiple images column
+    await client.query(`
+      ALTER TABLE cars ADD COLUMN IF NOT EXISTS images TEXT;
+    `);
+
     // Seeding has been commented out to prevent pseudo cars from automatically reappearing when deleted
     /*
     // Check if table is empty
