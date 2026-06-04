@@ -163,6 +163,7 @@ async function loadCars() {
   currentFilteredCars = [...carsData];
   renderCarsGrid(carsData);
   renderSliderCars();
+  renderGalleryCars();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -366,6 +367,72 @@ function renderSliderCars() {
   slides = document.querySelectorAll(".slide");
   dots = document.querySelectorAll(".slider-dot");
   activeSlideIndex = 0;
+}
+
+function renderGalleryCars() {
+  const container = document.getElementById("gallery-grid-container");
+  if (!container) return;
+  container.innerHTML = "";
+  
+  if (carsData.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem;">
+        <i class="fa-solid fa-camera" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+        <h3>No Showroom Vehicles</h3>
+        <p style="color: var(--text-muted);">Please add cars via the admin panel to populate this gallery.</p>
+      </div>
+    `;
+    const countTextEl = document.getElementById("gallery-count-text");
+    if (countTextEl) countTextEl.innerText = "Showing 0 premium vehicles";
+    return;
+  }
+  
+  // Show up to 10 vehicles in gallery
+  const galleryVehicles = carsData.slice(0, 10);
+  
+  galleryVehicles.forEach((car, index) => {
+    let extraClass = "";
+    if (index === 0) extraClass = "gallery-spotlight";
+    else if (index === 4) extraClass = "gallery-wide";
+    
+    const item = document.createElement("div");
+    item.className = `gallery-item ${extraClass}`.trim();
+    item.setAttribute("data-category", car.category);
+    item.setAttribute("onclick", `triggerCarModal(${car.id})`);
+    
+    item.innerHTML = `
+      <div class="gallery-glow"></div>
+      <div class="gallery-img-wrap">
+        <img src="${car.image}" alt="${car.brand} ${car.model}" loading="lazy" onerror="this.src='logo2.png'">
+      </div>
+      <div class="gallery-overlay">
+        <div class="gallery-tag"><span class="gallery-tag-dot"></span> Inspected</div>
+        <div class="gallery-item-info">
+          <span class="gallery-item-cat">${car.category} · ${car.year}</span>
+          <h3 class="gallery-item-name">${car.brand} ${car.model}</h3>
+          <div class="gallery-item-specs">
+            <span class="spec-pill"><i class="fa-solid fa-calendar-days"></i> ${car.year}</span>
+            <span class="spec-pill"><i class="fa-solid fa-gauge-high"></i> ${car.km}</span>
+            <span class="spec-pill"><i class="fa-solid fa-gas-pump"></i> ${car.fuel}</span>
+            <span class="spec-pill"><i class="fa-solid fa-gears"></i> ${car.transmission === 'Automatic' ? 'Auto' : 'Manual'}</span>
+          </div>
+        </div>
+        <div class="gallery-cta">View Details <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+      <div class="gallery-shimmer"></div>
+    `;
+    container.appendChild(item);
+  });
+  
+  const countTextEl = document.getElementById("gallery-count-text");
+  if (countTextEl) {
+    countTextEl.innerText = `Showing ${galleryVehicles.length} of ${carsData.length} premium vehicles`;
+  }
+  
+  // Initialize interactions for the newly created elements
+  if (typeof initShowroomInteractions === "function") {
+    initShowroomInteractions();
+  }
 }
 
 function slideTo(index) {
@@ -572,8 +639,8 @@ function filterGallery(category, buttonEl) {
   });
 }
 
-// Self-invoking showroom mouse tracker and 3D parallax tilt controller
-(function initShowroomInteractions() {
+// Showroom mouse tracker and 3D parallax tilt controller
+function initShowroomInteractions() {
   const galleryItems = document.querySelectorAll(".gallery-item");
   if (!galleryItems.length) return;
 
@@ -615,7 +682,12 @@ function filterGallery(category, buttonEl) {
       item.style.transition = "none";
     });
   });
-})();
+}
+
+// Run initially on load
+document.addEventListener("DOMContentLoaded", () => {
+  initShowroomInteractions();
+});
 
 /* ==========================================================================
    10. LOADING SCREEN LOGIC

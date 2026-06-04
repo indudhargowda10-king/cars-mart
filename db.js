@@ -116,6 +116,8 @@ async function initDB() {
       );
     `);
 
+    // Seeding has been commented out to prevent pseudo cars from automatically reappearing when deleted
+    /*
     // Check if table is empty
     const result = await client.query('SELECT COUNT(*) FROM cars');
     if (parseInt(result.rows[0].count) === 0) {
@@ -128,6 +130,7 @@ async function initDB() {
       }
       console.log('Seeding complete.');
     }
+    */
   } catch (err) {
     console.error('Error initializing database', err);
   } finally {
