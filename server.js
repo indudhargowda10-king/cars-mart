@@ -59,7 +59,7 @@ app.post('/api/login', (req, res) => {
 });
 
 // Fallback to serve index.html
-app.get('/(.*)', (req, res) => {
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
