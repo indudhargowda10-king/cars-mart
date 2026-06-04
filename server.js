@@ -45,7 +45,19 @@ app.use(express.static(__dirname));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // API endpoints
-app.post('/api/upload', upload.single('image'), (req, res) => {
+app.post('/api/upload', (req, res, next) => {
+  upload.single('image')(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
+      return res.status(400).json({ success: false, message: err.message });
+    } else if (err) {
+      // An unknown error occurred when uploading.
+      return res.status(400).json({ success: false, message: err.message });
+    }
+    // Everything went fine.
+    next();
+  });
+}, (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, message: 'No file uploaded or invalid format.' });
