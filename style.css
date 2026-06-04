@@ -170,6 +170,7 @@ a {
   height: 50px;
   width: 270px; /* Perfectly sized to accommodate the logo width (180 * 1.5) without overlapping links */
   display: block;
+  flex-shrink: 0; /* Guarantee that the logo container never shrinks and overlaps with Home */
 }
 
 .logo-img {
@@ -181,6 +182,20 @@ a {
   z-index: 1001;
   pointer-events: none;
   transition: var(--transition-smooth);
+}
+
+@media (max-width: 1200px) {
+  .logo-link {
+    width: 220px; /* Scaled down slightly to prevent link collision on medium screens */
+    height: 44px;
+  }
+  .logo-img {
+    height: 146px;
+    top: -51px;
+  }
+  .nav-links {
+    gap: 1.25rem; /* Compress the gap to make sure all links fit in one line */
+  }
 }
 
 @media (max-width: 991px) {
@@ -350,6 +365,9 @@ a {
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 0 1rem; /* Compact container padding to free up horizontal space */
+  }
   .nav-ctas {
     gap: 0.4rem;
   }
@@ -365,17 +383,24 @@ a {
   }
 }
 
-@media (max-width: 380px) {
-  /* On extremely narrow screens, hide text in navbar CTA buttons and show only the icons to guarantee zero wrapping */
+@media (max-width: 450px) {
+  /* On small mobile screens, hide CTA text to morph buttons into compact, elegant circular pills */
   .btn-nav .btn-text {
     display: none;
   }
   .btn-nav {
-    padding: 0.45rem 0.65rem;
-    font-size: 0.85rem;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
   }
   .nav-ctas {
-    gap: 0.3rem;
+    gap: 0.35rem;
   }
 }
 
@@ -2832,6 +2857,18 @@ footer {
   }
   .calc-outputs {
     flex-direction: column;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .sell-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sell-card {
+    padding: 1.2rem;
   }
 }
 
