@@ -795,9 +795,12 @@ function triggerCarModal(carId) {
     waLink.href = `https://wa.me/919008740899?text=${message}`;
   }
 
+  // Update active image to index 0
+  updateModalImage(0);
+
   // Open Modal
   const modal = document.getElementById("car-modal");
-  if (modal) modal.style.display = "flex";
+  if (modal) modal.classList.add("active");
 }
 
 // Sharing Event Handlers
@@ -842,15 +845,7 @@ window.shareCarWebShare = function() {
     }).catch(err => console.log("Web Share error", err));
   }
 };
-  updateModalImage(0);
 
-  // Custom WhatsApp message (no price references)
-  const waMessage = `Hi Car Mart, I am interested in the verified used ${car.brand} ${car.model} (${car.year}). Please share availability and details.`;
-  const waLink = document.getElementById("modal-whatsapp-link");
-  if (waLink) waLink.href = `https://wa.me/919008740899?text=${encodeURIComponent(waMessage)}`;
-  
-  document.getElementById("car-modal").classList.add("active");
-}
 
 function closeCarModal() {
   document.getElementById("car-modal").classList.remove("active");
