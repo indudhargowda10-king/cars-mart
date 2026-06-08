@@ -126,6 +126,18 @@ async function initDB() {
       ALTER TABLE cars ALTER COLUMN image TYPE TEXT;
     `);
 
+    // Add new columns for variant, color, price, negotiable, and delivery details
+    await client.query(`
+      ALTER TABLE cars ADD COLUMN IF NOT EXISTS variant VARCHAR(255);
+      ALTER TABLE cars ADD COLUMN IF NOT EXISTS color VARCHAR(100);
+      ALTER TABLE cars ADD COLUMN IF NOT EXISTS price NUMERIC;
+      ALTER TABLE cars ADD COLUMN IF NOT EXISTS negotiable BOOLEAN DEFAULT FALSE;
+      ALTER TABLE cars ADD COLUMN IF NOT EXISTS delivery_status VARCHAR(50) DEFAULT 'Available';
+      ALTER TABLE cars ADD COLUMN IF NOT EXISTS delivery_images TEXT;
+      ALTER TABLE cars ADD COLUMN IF NOT EXISTS delivery_notes TEXT;
+      ALTER TABLE cars ADD COLUMN IF NOT EXISTS delivery_date VARCHAR(50);
+    `);
+
     // Seeding has been commented out to prevent pseudo cars from automatically reappearing when deleted
     /*
     // Check if table is empty

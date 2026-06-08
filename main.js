@@ -164,11 +164,48 @@ async function loadCars() {
   renderCarsGrid(carsData);
   renderSliderCars();
   renderGalleryCars();
+
+  // Hash deep-link check
+  const hash = window.location.hash;
+  if (hash && hash.startsWith("#car-")) {
+    const carId = parseInt(hash.replace("#car-", ""));
+    if (!isNaN(carId)) {
+      triggerCarModal(carId);
+    }
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   loadCars();
 });
+
+/* ==========================================================================
+   4. RENDER MARKETPLACE GRID CARDS
+   ========================================================================== */
+function formatPrice(price, negotiable = false) {
+  if (!price) return "Call for Price";
+  const num = parseFloat(price);
+  let priceStr = "";
+  if (num >= 10000000) {
+    priceStr = `₹ ${(num / 10000000).toFixed(2)} Cr`;
+  } else if (num >= 100000) {
+    priceStr = `₹ ${(num / 100000).toFixed(2)} Lakh`;
+  } else {
+    priceStr = `₹ ${num.toLocaleString('en-IN')}`;
+  }
+  priceStr = priceStr.replace(/\.00\s/, ' ');
+  if (negotiable) {
+    priceStr += " (Negotiable)";
+  }
+  return priceStr;
+}
+
+function formatKm(km) {
+  if (!km) return "0 km";
+  const num = parseInt(km);
+  if (isNaN(num)) return km;
+  return `${num.toLocaleString('en-IN')} km`;
+}
 
 /* ==========================================================================
    4. RENDER MARKETPLACE GRID CARDS
@@ -193,23 +230,36 @@ function renderCarsGrid(carsList) {
   carsList.forEach(car => {
     const card = document.createElement("div");
     card.className = "car-card";
+    
+    // Status Badge if In Transit / Delivered
+    const status = car.delivery_status || 'Available';
+    let statusBadge = "";
+    if (status !== 'Available') {
+      const statusClass = status.toLowerCase().replace(" ", "-");
+      statusBadge = `<span class="delivery-status-badge status-badge ${statusClass}" style="position: absolute; top: 1rem; left: 1rem; z-index: 10;">${status}</span>`;
+    }
+
     card.innerHTML = `
-      <div class="car-card-img-wrap" onclick="triggerCarModal(${car.id})">
+      <div class="car-card-img-wrap" onclick="triggerCarModal(${car.id})" style="position: relative;">
+        ${statusBadge}
         <span class="inspected-badge"><i class="fa-solid fa-circle-check"></i> Inspected</span>
-        <img src="${car.image}" alt="${car.brand} ${car.model}">
+        <img src="${car.image}" alt="${car.brand} ${car.model}" onerror="this.src='logo2.png'">
       </div>
       <div class="car-card-content">
-        <h3 class="car-card-title">${car.brand} ${car.model}</h3>
+        <h3 class="car-card-title">${car.brand} ${car.model} ${car.variant || ''}</h3>
         <div class="car-card-specs">
           <span>${car.year}</span>
-          <span>${car.km}</span>
+          <span>${formatKm(car.km)}</span>
           <span>${car.fuel}</span>
           <span>${car.transmission}</span>
         </div>
         <div class="car-card-footer">
-          <div class="car-card-price-wrap">
-            <span class="car-card-price" style="font-size: 1.05rem; display: flex; align-items: center; gap: 0.35rem;">
-              <i class="fa-solid fa-certificate" style="color: var(--accent-orange);"></i> Certified Premium
+          <div class="car-card-price-wrap" style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+            <span class="car-card-price" style="font-size: 1.15rem; font-weight: 700; color: var(--accent-orange);">
+              ${formatPrice(car.price, car.negotiable)}
+            </span>
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">
+              <i class="fa-solid fa-circle-check" style="color: #10B981;"></i> Certified
             </span>
           </div>
         </div>
@@ -221,8 +271,6 @@ function renderCarsGrid(carsList) {
     `;
     container.appendChild(card);
   });
-  
-  // Car-card entrance is handled by CSS @keyframes fadeInUp
 }
 
 /* ==========================================================================
@@ -231,14 +279,20 @@ function renderCarsGrid(carsList) {
 function handleSearchSubmit() {
   const brand = document.getElementById("search-brand").value;
   const fuel = document.getElementById("search-fuel").value;
-  const transmission = document.getElementById("search-transmission").value;
+  const priceRange = document.getElementById("search-price").value;
   const year = document.getElementById("search-year").value;
   
   currentFilteredCars = carsData.filter(car => {
     if (brand && car.brand !== brand) return false;
     if (fuel && car.fuel !== fuel) return false;
-    if (transmission && car.transmission !== transmission) return false;
     if (year && car.year < parseInt(year)) return false;
+    
+    if (priceRange) {
+      const [minPrice, maxPrice] = priceRange.split("-").map(Number);
+      const priceVal = parseFloat(car.price || 0);
+      if (priceVal < minPrice || priceVal > maxPrice) return false;
+    }
+    
     return true;
   });
   
@@ -578,14 +632,31 @@ function nextModalImage() {
   updateModalImage(currentModalImgIndex + 1);
 }
 
+let currentModalCarId = null;
+
 function triggerCarModal(carId) {
   const car = carsData.find(c => c.id === carId);
   if (!car) return;
   
-  document.getElementById("modal-car-name").innerText = `${car.brand} ${car.model}`;
+  currentModalCarId = carId;
+  
+  // Set Hash Deep Link without scrolling page
+  history.replaceState(null, null, `#car-${carId}`);
+  
+  // Update web share button visibility if supported
+  const webShareBtn = document.getElementById("web-share-btn");
+  if (webShareBtn) {
+    if (navigator.share) {
+      webShareBtn.style.display = "flex";
+    } else {
+      webShareBtn.style.display = "none";
+    }
+  }
+
+  document.getElementById("modal-car-name").innerText = `${car.brand} ${car.model} ${car.variant || ''}`;
   
   document.getElementById("modal-car-year").innerText = car.year;
-  document.getElementById("modal-car-km").innerText = car.km;
+  document.getElementById("modal-car-km").innerText = formatKm(car.km);
   document.getElementById("modal-car-fuel").innerText = car.fuel;
   document.getElementById("modal-car-transmission").innerText = car.transmission;
   const ownershipEl = document.getElementById("modal-car-ownership");
@@ -593,9 +664,69 @@ function triggerCarModal(carId) {
   
   const statusEl = document.getElementById("modal-car-status");
   const warrantyEl = document.getElementById("modal-car-warranty");
-  if (statusEl) statusEl.innerText = "Available";
+  
+  const status = car.delivery_status || 'Available';
+  if (statusEl) {
+    statusEl.innerText = status;
+    statusEl.className = `modal-info-val status-badge ${status.toLowerCase().replace(" ", "-")}`;
+    statusEl.style.fontSize = "0.8rem";
+  }
   if (warrantyEl) warrantyEl.innerText = "1-Year Warranty Included";
   
+  // Render Delivery Updates Section
+  const deliverySection = document.getElementById("modal-delivery-section");
+  const deliveryBadge = document.getElementById("modal-delivery-badge");
+  const deliveryDate = document.getElementById("modal-delivery-date");
+  const deliveryNotes = document.getElementById("modal-delivery-notes");
+  const deliveryGallery = document.getElementById("modal-delivery-gallery");
+
+  if (deliverySection) {
+    if (status !== 'Available') {
+      deliverySection.style.display = "block";
+      if (deliveryBadge) {
+        deliveryBadge.innerText = status;
+        deliveryBadge.className = `status-badge ${status.toLowerCase().replace(" ", "-")}`;
+      }
+      if (deliveryDate) {
+        deliveryDate.innerText = car.delivery_date ? `Date: ${car.delivery_date}` : "";
+      }
+      if (deliveryNotes) {
+        deliveryNotes.innerText = car.delivery_notes || "No notes available.";
+      }
+      if (deliveryGallery) {
+        deliveryGallery.innerHTML = "";
+        let delImgs = [];
+        if (car.delivery_images) {
+          try {
+            delImgs = JSON.parse(car.delivery_images);
+          } catch(e) {}
+        }
+        if (delImgs.length > 0) {
+          delImgs.forEach((img, idx) => {
+            const el = document.createElement("img");
+            el.src = img;
+            el.alt = `Delivery photo ${idx + 1}`;
+            el.style.width = "120px";
+            el.style.height = "80px";
+            el.style.objectFit = "cover";
+            el.style.borderRadius = "6px";
+            el.style.border = "1px solid var(--border-color)";
+            el.style.flexShrink = "0";
+            el.style.cursor = "pointer";
+            el.onerror = function() { this.src = 'logo2.png'; };
+            // Click delivery photo to open lightbox too!
+            el.onclick = () => openLightbox(delImgs, idx);
+            deliveryGallery.appendChild(el);
+          });
+        } else {
+          deliveryGallery.innerHTML = '<span style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">No delivery photos.</span>';
+        }
+      }
+    } else {
+      deliverySection.style.display = "none";
+    }
+  }
+
   // Parse images if available, otherwise fallback to single image array
   try {
     modalImages = car.images ? JSON.parse(car.images) : [car.image];
@@ -647,7 +778,70 @@ function triggerCarModal(carId) {
     }
   }
   
-  // Update active image to index 0
+  // Update main display image
+  const modalImg = document.getElementById("modal-car-img");
+  if (modalImg) {
+    modalImg.src = modalImages[0];
+    modalImg.onerror = function() { this.src = 'logo2.png'; };
+    modalImg.style.cursor = "zoom-in";
+    // Click main image to open fullscreen lightbox
+    modalImg.onclick = () => openLightbox(modalImages, currentModalImgIndex);
+  }
+
+  // Pre-fill WhatsApp Inquiry Link
+  const waLink = document.getElementById("modal-whatsapp-link");
+  if (waLink) {
+    const message = encodeURIComponent(`Hello, I am interested in booking a test drive for the ${car.brand} ${car.model} ${car.variant || ''} (${car.year}, price: ${formatPrice(car.price, car.negotiable)}). Please let me know its availability.`);
+    waLink.href = `https://wa.me/919008740899?text=${message}`;
+  }
+
+  // Open Modal
+  const modal = document.getElementById("car-modal");
+  if (modal) modal.style.display = "flex";
+}
+
+// Sharing Event Handlers
+window.shareCarWhatsApp = function() {
+  if (!currentModalCarId) return;
+  const car = carsData.find(c => c.id === currentModalCarId);
+  if (!car) return;
+  
+  const text = `Check out this certified pre-owned car at Car Mart Mysuru!\n\n🚗 *${car.brand} ${car.model} ${car.variant || ''}*\n📅 Year: ${car.year}\n⛽ Fuel: ${car.fuel}\n🛣️ KMs: ${formatKm(car.km)}\n💰 Price: ${formatPrice(car.price, car.negotiable)}\n\nView full details here: ${window.location.origin}/#car-${car.id}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+};
+
+window.copyCarLink = function() {
+  if (!currentModalCarId) return;
+  const link = `${window.location.origin}/#car-${currentModalCarId}`;
+  
+  navigator.clipboard.writeText(link).then(() => {
+    alert("Shareable car listing link copied to clipboard!");
+  }).catch(err => {
+    console.error("Copy failed", err);
+    // Fallback manual input select
+    const input = document.createElement("input");
+    input.value = link;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand("copy");
+    document.body.removeChild(input);
+    alert("Shareable car listing link copied to clipboard!");
+  });
+};
+
+window.shareCarWebShare = function() {
+  if (!currentModalCarId) return;
+  const car = carsData.find(c => c.id === currentModalCarId);
+  if (!car) return;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: `${car.brand} ${car.model} | Car Mart`,
+      text: `Check out this ${car.brand} ${car.model} ${car.variant || ''} at Car Mart Mysuru!`,
+      url: `${window.location.origin}/#car-${car.id}`
+    }).catch(err => console.log("Web Share error", err));
+  }
+};
   updateModalImage(0);
 
   // Custom WhatsApp message (no price references)
@@ -660,13 +854,15 @@ function triggerCarModal(carId) {
 
 function closeCarModal() {
   document.getElementById("car-modal").classList.remove("active");
+  history.replaceState(null, null, ' ');
+  currentModalCarId = null;
 }
 
 function sendWhatsAppInquiry(carId) {
   const car = carsData.find(c => c.id === carId);
   if (!car) return;
   
-  const waMessage = `Hi Car Mart, I am interested in inquiring about the verified used ${car.brand} ${car.model} (${car.year}).`;
+  const waMessage = `Hi Car Mart, I am interested in inquiring about the verified used ${car.brand} ${car.model} ${car.variant || ''} (${car.year}, price: ${formatPrice(car.price, car.negotiable)}).`;
   window.open(`https://wa.me/919008740899?text=${encodeURIComponent(waMessage)}`, '_blank');
 }
 
@@ -675,6 +871,10 @@ document.querySelectorAll(".modal-overlay").forEach(overlay => {
   overlay.addEventListener("click", function(e) {
     if (e.target === this) {
       this.classList.remove("active");
+      if (this.id === "car-modal") {
+        history.replaceState(null, null, ' ');
+        currentModalCarId = null;
+      }
     }
   });
 });
@@ -858,3 +1058,142 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+/* ==========================================================================
+   12. FULLSCREEN LIGHTBOX GALLERY WITH SWIPE & ZOOM
+   ========================================================================== */
+let lightboxImages = [];
+let currentLightboxIndex = 0;
+let touchStartX = 0;
+let touchEndX = 0;
+
+window.openLightbox = function(images, index) {
+  lightboxImages = images;
+  currentLightboxIndex = index;
+  
+  const lightbox = document.getElementById("lightbox");
+  if (!lightbox) return;
+  
+  updateLightboxImage();
+  renderLightboxThumbnails();
+  
+  lightbox.style.display = "flex";
+  document.body.style.overflow = "hidden"; // Prevent background scroll
+  
+  // Set up swipe touch listeners
+  const imgWrap = lightbox.querySelector(".lightbox-content-wrap");
+  if (imgWrap) {
+    // Clear any previous listeners
+    imgWrap.removeEventListener("touchstart", handleTouchStart);
+    imgWrap.removeEventListener("touchend", handleTouchEnd);
+    
+    imgWrap.addEventListener("touchstart", handleTouchStart, { passive: true });
+    imgWrap.addEventListener("touchend", handleTouchEnd, { passive: true });
+  }
+
+  // Zoom listener setup
+  const img = document.getElementById("lightbox-img");
+  if (img && !img.hasZoomListener) {
+    img.addEventListener("click", () => {
+      img.classList.toggle("zoomed");
+    });
+    img.hasZoomListener = true;
+  }
+};
+
+window.closeLightbox = function() {
+  const lightbox = document.getElementById("lightbox");
+  if (lightbox) {
+    lightbox.style.display = "none";
+  }
+  document.body.style.overflow = ""; // Restore scroll
+  resetZoom();
+};
+
+function updateLightboxImage() {
+  const img = document.getElementById("lightbox-img");
+  if (!img || lightboxImages.length === 0) return;
+  
+  resetZoom();
+  img.src = lightboxImages[currentLightboxIndex];
+  img.onerror = function() { this.src = 'logo2.png'; };
+  
+  // Highlight active thumbnail
+  const thumbs = document.querySelectorAll(".lightbox-thumb-item");
+  thumbs.forEach((thumb, idx) => {
+    if (idx === currentLightboxIndex) {
+      thumb.classList.add("active");
+      thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    } else {
+      thumb.classList.remove("active");
+    }
+  });
+}
+
+function renderLightboxThumbnails() {
+  const container = document.getElementById("lightbox-thumbnails-container");
+  if (!container) return;
+  container.innerHTML = "";
+  
+  if (lightboxImages.length <= 1) {
+    container.style.display = "none";
+    return;
+  }
+  container.style.display = "flex";
+  
+  lightboxImages.forEach((imgSrc, idx) => {
+    const thumb = document.createElement("div");
+    thumb.className = `lightbox-thumb-item ${idx === currentLightboxIndex ? 'active' : ''}`;
+    thumb.onclick = () => {
+      currentLightboxIndex = idx;
+      updateLightboxImage();
+    };
+    
+    const img = document.createElement("img");
+    img.src = imgSrc;
+    img.onerror = function() { this.src = 'logo2.png'; };
+    
+    thumb.appendChild(img);
+    container.appendChild(thumb);
+  });
+}
+
+window.prevLightboxImage = function() {
+  if (lightboxImages.length <= 1) return;
+  currentLightboxIndex = (currentLightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+  updateLightboxImage();
+};
+
+window.nextLightboxImage = function() {
+  if (lightboxImages.length <= 1) return;
+  currentLightboxIndex = (currentLightboxIndex + 1) % lightboxImages.length;
+  updateLightboxImage();
+};
+
+// Touch swipe gestures
+function handleTouchStart(e) {
+  touchStartX = e.changedTouches[0].screenX;
+}
+
+function handleTouchEnd(e) {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipeGesture();
+}
+
+function handleSwipeGesture() {
+  const swipeThreshold = 50;
+  if (touchStartX - touchEndX > swipeThreshold) {
+    // Swipe left -> Next
+    nextLightboxImage();
+  } else if (touchEndX - touchStartX > swipeThreshold) {
+    // Swipe right -> Prev
+    prevLightboxImage();
+  }
+}
+
+function resetZoom() {
+  const img = document.getElementById("lightbox-img");
+  if (img) {
+    img.classList.remove("zoomed");
+  }
+}

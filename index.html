@@ -162,11 +162,33 @@
               <option value="">All Brands</option>
               <option value="Maruti Suzuki">Maruti Suzuki</option>
               <option value="Hyundai">Hyundai</option>
-              <option value="Honda">Honda</option>
-              <option value="Toyota">Toyota</option>
               <option value="Tata">Tata</option>
               <option value="Mahindra">Mahindra</option>
+              <option value="Kia">Kia</option>
+              <option value="Toyota">Toyota</option>
+              <option value="Honda">Honda</option>
+              <option value="Ford">Ford</option>
               <option value="Renault">Renault</option>
+              <option value="Nissan">Nissan</option>
+              <option value="Skoda">Skoda</option>
+              <option value="Volkswagen">Volkswagen</option>
+              <option value="MG">MG</option>
+              <option value="BMW">BMW</option>
+              <option value="Mercedes-Benz">Mercedes-Benz</option>
+              <option value="Audi">Audi</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="search-field">
+          <label for="search-price">Price Range</label>
+          <div class="search-select-wrapper">
+            <select class="search-select" id="search-price">
+              <option value="">All Prices</option>
+              <option value="0-500000">Under 5 Lakh</option>
+              <option value="500000-1000000">5 - 10 Lakh</option>
+              <option value="1000000-2000000">10 - 20 Lakh</option>
+              <option value="2000000-99999999">Above 20 Lakh</option>
             </select>
           </div>
         </div>
@@ -178,17 +200,9 @@
               <option value="">All Fuels</option>
               <option value="Petrol">Petrol</option>
               <option value="Diesel">Diesel</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="search-field">
-          <label for="search-transmission">Transmission</label>
-          <div class="search-select-wrapper">
-            <select class="search-select" id="search-transmission">
-              <option value="">Any Type</option>
-              <option value="Manual">Manual</option>
-              <option value="Automatic">Automatic</option>
+              <option value="CNG">CNG</option>
+              <option value="Electric (EV)">Electric (EV)</option>
+              <option value="Hybrid">Hybrid</option>
             </select>
           </div>
         </div>
@@ -198,10 +212,10 @@
           <div class="search-select-wrapper">
             <select class="search-select" id="search-year">
               <option value="">Any Year</option>
+              <option value="2015">2015 & Above</option>
               <option value="2018">2018 & Above</option>
               <option value="2020">2020 & Above</option>
-              <option value="2021">2021 & Above</option>
-              <option value="2022">2022</option>
+              <option value="2022">2022 & Above</option>
             </select>
           </div>
         </div>
@@ -592,6 +606,13 @@
             style="border: none; padding-top: 1rem; display: grid; grid-template-columns: 1fr; gap: 0.5rem;">
             <a href="https://wa.me/919008740899" target="_blank" class="btn-card-whatsapp" id="modal-whatsapp-link"><i
                 class="fa-brands fa-whatsapp"></i> Chat on WhatsApp</a>
+            
+            <!-- Share row -->
+            <div class="share-actions-row" style="display: flex; gap: 0.5rem; margin-top: 0.5rem; width: 100%;">
+              <button class="btn-nav btn-nav-outline" onclick="shareCarWhatsApp()" style="flex: 1; justify-content: center; gap: 0.35rem; font-size: 0.85rem; padding: 0.5rem;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> Share</button>
+              <button class="btn-nav btn-nav-outline" onclick="copyCarLink()" style="flex: 1; justify-content: center; gap: 0.35rem; font-size: 0.85rem; padding: 0.5rem;"><i class="fa-solid fa-copy"></i> Copy Link</button>
+              <button class="btn-nav btn-nav-outline" onclick="shareCarWebShare()" style="display: none; flex: 1; justify-content: center; gap: 0.35rem; font-size: 0.85rem; padding: 0.5rem;" id="web-share-btn"><i class="fa-solid fa-share-nodes"></i> Share Sheet</button>
+            </div>
           </div>
         </div>
 
@@ -610,6 +631,19 @@
             <div class="modal-check-item"><i class="fa-solid fa-circle-check"></i> Tire Tread Depth > 4mm</div>
           </div>
         </div>
+
+        <!-- Delivery Updates Section -->
+        <div class="modal-delivery-updates" id="modal-delivery-section" style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-top: 1.5rem; display: none;">
+          <h4 style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; color: var(--accent-orange);"><i class="fa-solid fa-truck-ramp-box"></i> Delivery Updates</h4>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center;">
+            <span class="status-badge" id="modal-delivery-badge">Available</span>
+            <span id="modal-delivery-date" style="font-size: 0.9rem; color: var(--text-muted);"></span>
+          </div>
+          <p id="modal-delivery-notes" style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1rem;"></p>
+          <div class="modal-delivery-gallery" id="modal-delivery-gallery" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
+            <!-- Delivery photos rendered dynamically via JS -->
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -625,6 +659,21 @@
       <button class="btn-card-detail"
         style="background: var(--primary); color: #FFF; border-color: var(--primary); width: 100%;"
         onclick="closeSuccessModal()">Great, Thank You</button>
+    </div>
+  </div>
+
+  <!-- Fullscreen Image Lightbox -->
+  <div class="lightbox-overlay" id="lightbox" style="display: none;">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <button class="lightbox-nav lightbox-prev" onclick="prevLightboxImage()"><i class="fa-solid fa-chevron-left"></i></button>
+    <div class="lightbox-content-wrap">
+      <div class="lightbox-image-container">
+        <img id="lightbox-img" src="" alt="Enlarged Car View" style="transition: transform 0.2s ease-out; transform-origin: center;">
+      </div>
+    </div>
+    <button class="lightbox-nav lightbox-next" onclick="nextLightboxImage()"><i class="fa-solid fa-chevron-right"></i></button>
+    <div class="lightbox-thumbnails-strip" id="lightbox-thumbnails-container">
+      <!-- Thumbnail list loaded dynamically -->
     </div>
   </div>
 

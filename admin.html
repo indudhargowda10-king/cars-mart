@@ -70,61 +70,196 @@
         </div>
         
         <form id="add-car-form" class="add-car-grid">
+          <!-- Basic Details -->
           <div class="form-group">
-            <label>Brand</label>
-            <input type="text" id="car-brand" placeholder="e.g. Toyota" required>
+            <label for="car-brand">Car Brand</label>
+            <select id="car-brand" required>
+              <option value="">Select Brand</option>
+              <option value="Maruti Suzuki">Maruti Suzuki</option>
+              <option value="Hyundai">Hyundai</option>
+              <option value="Tata">Tata</option>
+              <option value="Mahindra">Mahindra</option>
+              <option value="Kia">Kia</option>
+              <option value="Toyota">Toyota</option>
+              <option value="Honda">Honda</option>
+              <option value="Ford">Ford</option>
+              <option value="Renault">Renault</option>
+              <option value="Nissan">Nissan</option>
+              <option value="Skoda">Skoda</option>
+              <option value="Volkswagen">Volkswagen</option>
+              <option value="MG">MG</option>
+              <option value="BMW">BMW</option>
+              <option value="Mercedes-Benz">Mercedes-Benz</option>
+              <option value="Audi">Audi</option>
+              <option value="Other">Other (Custom Brand)</option>
+            </select>
           </div>
-          <div class="form-group">
-            <label>Model</label>
-            <input type="text" id="car-model" placeholder="e.g. Fortuner 2.8 4x2" required>
+          
+          <div class="form-group" id="car-brand-custom-group" style="display: none;">
+            <label for="car-brand-custom">Custom Brand Name</label>
+            <input type="text" id="car-brand-custom" placeholder="Type Custom Brand">
           </div>
+
           <div class="form-group">
-            <label>Category</label>
+            <label for="car-model">Car Model</label>
+            <select id="car-model" required>
+              <option value="">Select Brand First</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="car-model-custom-group" style="display: none;">
+            <label for="car-model-custom">Custom Model Name</label>
+            <input type="text" id="car-model-custom" placeholder="Type Custom Model">
+          </div>
+
+          <div class="form-group">
+            <label for="car-variant">Version / Variant</label>
+            <select id="car-variant" required>
+              <option value="">Select Variant</option>
+              <option value="LXI">LXI</option>
+              <option value="VXI">VXI</option>
+              <option value="ZXI">ZXI</option>
+              <option value="ZXI+">ZXI+</option>
+              <option value="XE">XE</option>
+              <option value="XM">XM</option>
+              <option value="XT">XT</option>
+              <option value="XZ">XZ</option>
+              <option value="XZ+">XZ+</option>
+              <option value="Era">Era</option>
+              <option value="Magna">Magna</option>
+              <option value="Asta">Asta</option>
+              <option value="Asta(O)">Asta(O)</option>
+              <option value="Active">Active</option>
+              <option value="Ambition">Ambition</option>
+              <option value="Style">Style</option>
+              <option value="S">S</option>
+              <option value="SX">SX</option>
+              <option value="SX(O)">SX(O)</option>
+              <option value="Trend">Trend</option>
+              <option value="Titanium">Titanium</option>
+              <option value="Titanium+">Titanium+</option>
+              <option value="Other">Other (Custom Variant)</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="car-variant-custom-group" style="display: none;">
+            <label for="car-variant-custom">Custom Variant Name</label>
+            <input type="text" id="car-variant-custom" placeholder="Type Custom Variant">
+          </div>
+
+          <div class="form-group">
+            <label for="car-category">Category</label>
             <select id="car-category" required>
               <option value="Hatchback">Hatchback</option>
               <option value="Sedan">Sedan</option>
               <option value="SUV">SUV</option>
-              <option value="MUV">MUV</option>
+              <option value="MUV">MUV / MPV</option>
             </select>
           </div>
+
           <div class="form-group">
-            <label>Year</label>
-            <input type="number" id="car-year" placeholder="e.g. 2022" required>
+            <label for="car-year">Manufacturing Year</label>
+            <input type="number" id="car-year" min="1990" max="2030" placeholder="e.g. 2022" required>
           </div>
+
           <div class="form-group">
-            <label>KMs Driven</label>
-            <input type="text" id="car-km" placeholder="e.g. 15,000 km" required>
+            <label for="car-km">Kilometers Driven</label>
+            <input type="number" id="car-km" placeholder="e.g. 45000" required>
           </div>
+
+          <!-- Appearance & Specs -->
           <div class="form-group">
-            <label>Fuel Type</label>
+            <label for="car-color">Colour Options</label>
+            <select id="car-color" required>
+              <option value="White">White</option>
+              <option value="Black">Black</option>
+              <option value="Silver">Silver</option>
+              <option value="Grey">Grey</option>
+              <option value="Red">Red</option>
+              <option value="Blue">Blue</option>
+              <option value="Brown">Brown</option>
+              <option value="Green">Green</option>
+              <option value="Gold">Gold</option>
+              <option value="Custom">Custom</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="car-fuel">Fuel Type</label>
             <select id="car-fuel" required>
               <option value="Petrol">Petrol</option>
               <option value="Diesel">Diesel</option>
-              <option value="Electric">Electric</option>
+              <option value="CNG">CNG</option>
+              <option value="Electric (EV)">Electric (EV)</option>
               <option value="Hybrid">Hybrid</option>
             </select>
           </div>
+
           <div class="form-group">
-            <label>Transmission</label>
+            <label for="car-transmission">Transmission</label>
             <select id="car-transmission" required>
               <option value="Manual">Manual</option>
               <option value="Automatic">Automatic</option>
             </select>
           </div>
+
           <div class="form-group">
-            <label>Ownership</label>
+            <label for="car-ownership">Ownership</label>
             <select id="car-ownership" required>
               <option value="1st Owner">1st Owner</option>
               <option value="2nd Owner">2nd Owner</option>
               <option value="3rd Owner">3rd Owner</option>
             </select>
           </div>
+
+          <!-- Pricing -->
+          <div class="form-group">
+            <label for="car-price">Price (INR)</label>
+            <input type="number" id="car-price" placeholder="e.g. 850000" required>
+          </div>
+
+          <div class="form-group" style="flex-direction: row; align-items: center; gap: 0.5rem; padding-top: 1.5rem;">
+            <input type="checkbox" id="car-negotiable" style="width: auto; margin: 0;">
+            <label for="car-negotiable" style="margin: 0; cursor: pointer;">Price Negotiable</label>
+          </div>
+
+          <!-- Media Section -->
           <div class="form-group full-width">
-            <label>Upload Car Images (.jpg, .jpeg, .png, .heic, .heif) — Select Multiple (Different Angles)</label>
+            <label>Upload Car Images (.jpg, .jpeg, .png, .heic, .heif) — Select Multiple (First image acts as Cover)</label>
             <input type="file" id="car-image-upload" accept=".jpg, .jpeg, .png, .heic, .heif, image/heic, image/heif" multiple required>
           </div>
+
+          <!-- Delivery Section (NEW) -->
+          <div class="form-group full-width" style="border-top: 1px solid var(--admin-border); margin-top: 1.5rem; padding-top: 1.5rem;">
+            <h4><i class="fa-solid fa-truck-ramp-box"></i> Delivery Updates (Optional)</h4>
+          </div>
+
+          <div class="form-group">
+            <label for="car-delivery-status">Delivery Status</label>
+            <select id="car-delivery-status">
+              <option value="Available">Available (Not Sold Yet)</option>
+              <option value="In Transit">In Transit</option>
+              <option value="Delivered">Delivered</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="car-delivery-date">Delivery Date</label>
+            <input type="date" id="car-delivery-date">
+          </div>
+
           <div class="form-group full-width">
-            <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Car to Inventory</button>
+            <label for="car-delivery-notes">Delivery Notes</label>
+            <textarea id="car-delivery-notes" placeholder="e.g. Delivered to customer in Mysuru with key handover ceremony." rows="2" style="background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.75rem; border-radius: 8px; color: var(--admin-text); font-family: inherit; resize: vertical;"></textarea>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Upload Delivery Photos (.jpg, .jpeg, .png, .heic, .heif) — Select Multiple</label>
+            <input type="file" id="car-delivery-images-upload" accept=".jpg, .jpeg, .png, .heic, .heif, image/heic, image/heif" multiple>
+          </div>
+
+          <div class="form-group full-width" style="margin-top: 1rem;">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Car to Showroom</button>
           </div>
         </form>
       </section>
@@ -134,6 +269,17 @@
         <div class="section-header">
           <h3><i class="fa-solid fa-list"></i> Current Inventory</h3>
           <span class="inventory-count" id="inventory-count">0 Cars</span>
+        </div>
+        
+        <div class="inventory-filters-row" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+          <input type="text" id="inventory-search-brand" placeholder="Search by Brand..." style="flex: 1; min-width: 150px; background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.6rem; border-radius: 6px; color: var(--admin-text); font-family: inherit;" oninput="filterInventoryTable()">
+          <input type="text" id="inventory-search-model" placeholder="Search by Model..." style="flex: 1; min-width: 150px; background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.6rem; border-radius: 6px; color: var(--admin-text); font-family: inherit;" oninput="filterInventoryTable()">
+          <select id="inventory-search-status" style="flex: 1; min-width: 150px; background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.6rem; border-radius: 6px; color: var(--admin-text); font-family: inherit;" onchange="filterInventoryTable()">
+            <option value="">All Statuses</option>
+            <option value="Available">Available</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Delivered">Delivered</option>
+          </select>
         </div>
         
         <div class="inventory-table-wrapper">
@@ -154,6 +300,214 @@
           </table>
         </div>
       </section>
+    </div>
+  </div>
+
+  <!-- Edit Car Modal Overlay -->
+  <div class="admin-modal-backdrop" id="edit-car-modal" style="display: none;">
+    <div class="admin-modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-pen-to-square"></i> Edit Car Listing</h3>
+        <button type="button" class="close-modal-btn" onclick="closeEditModal()">&times;</button>
+      </div>
+      <form id="edit-car-form" class="add-car-grid">
+        <input type="hidden" id="edit-car-id">
+        
+        <!-- Basic Details -->
+        <div class="form-group">
+          <label for="edit-car-brand">Car Brand</label>
+          <select id="edit-car-brand" required>
+            <option value="">Select Brand</option>
+            <option value="Maruti Suzuki">Maruti Suzuki</option>
+            <option value="Hyundai">Hyundai</option>
+            <option value="Tata">Tata</option>
+            <option value="Mahindra">Mahindra</option>
+            <option value="Kia">Kia</option>
+            <option value="Toyota">Toyota</option>
+            <option value="Honda">Honda</option>
+            <option value="Ford">Ford</option>
+            <option value="Renault">Renault</option>
+            <option value="Nissan">Nissan</option>
+            <option value="Skoda">Skoda</option>
+            <option value="Volkswagen">Volkswagen</option>
+            <option value="MG">MG</option>
+            <option value="BMW">BMW</option>
+            <option value="Mercedes-Benz">Mercedes-Benz</option>
+            <option value="Audi">Audi</option>
+            <option value="Other">Other (Custom Brand)</option>
+          </select>
+        </div>
+        
+        <div class="form-group" id="edit-car-brand-custom-group" style="display: none;">
+          <label for="edit-car-brand-custom">Custom Brand Name</label>
+          <input type="text" id="edit-car-brand-custom" placeholder="Type Custom Brand">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-car-model">Car Model</label>
+          <select id="edit-car-model" required>
+            <option value="">Select Brand First</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="edit-car-model-custom-group" style="display: none;">
+          <label for="edit-car-model-custom">Custom Model Name</label>
+          <input type="text" id="edit-car-model-custom" placeholder="Type Custom Model">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-car-variant">Version / Variant</label>
+          <select id="edit-car-variant" required>
+            <option value="">Select Variant</option>
+            <option value="LXI">LXI</option>
+            <option value="VXI">VXI</option>
+            <option value="ZXI">ZXI</option>
+            <option value="ZXI+">ZXI+</option>
+            <option value="XE">XE</option>
+            <option value="XM">XM</option>
+            <option value="XT">XT</option>
+            <option value="XZ">XZ</option>
+            <option value="XZ+">XZ+</option>
+            <option value="Era">Era</option>
+            <option value="Magna">Magna</option>
+            <option value="Asta">Asta</option>
+            <option value="Asta(O)">Asta(O)</option>
+            <option value="Active">Active</option>
+            <option value="Ambition">Ambition</option>
+            <option value="Style">Style</option>
+            <option value="S">S</option>
+            <option value="SX">SX</option>
+            <option value="SX(O)">SX(O)</option>
+            <option value="Trend">Trend</option>
+            <option value="Titanium">Titanium</option>
+            <option value="Titanium+">Titanium+</option>
+            <option value="Other">Other (Custom Variant)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="edit-car-variant-custom-group" style="display: none;">
+          <label for="edit-car-variant-custom">Custom Variant Name</label>
+          <input type="text" id="edit-car-variant-custom" placeholder="Type Custom Variant">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-car-category">Category</label>
+          <select id="edit-car-category" required>
+            <option value="Hatchback">Hatchback</option>
+            <option value="Sedan">Sedan</option>
+            <option value="SUV">SUV</option>
+            <option value="MUV">MUV / MPV</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-car-year">Manufacturing Year</label>
+          <input type="number" id="edit-car-year" min="1990" max="2030" placeholder="e.g. 2022" required>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-car-km">Kilometers Driven</label>
+          <input type="number" id="edit-car-km" placeholder="e.g. 45000" required>
+        </div>
+
+        <!-- Appearance & Specs -->
+        <div class="form-group">
+          <label for="edit-car-color">Colour Options</label>
+          <select id="edit-car-color" required>
+            <option value="White">White</option>
+            <option value="Black">Black</option>
+            <option value="Silver">Silver</option>
+            <option value="Grey">Grey</option>
+            <option value="Red">Red</option>
+            <option value="Blue">Blue</option>
+            <option value="Brown">Brown</option>
+            <option value="Green">Green</option>
+            <option value="Gold">Gold</option>
+            <option value="Custom">Custom</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-car-fuel">Fuel Type</label>
+          <select id="edit-car-fuel" required>
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="CNG">CNG</option>
+            <option value="Electric (EV)">Electric (EV)</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-car-transmission">Transmission</label>
+          <select id="edit-car-transmission" required>
+            <option value="Manual">Manual</option>
+            <option value="Automatic">Automatic</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-car-ownership">Ownership</label>
+          <select id="edit-car-ownership" required>
+            <option value="1st Owner">1st Owner</option>
+            <option value="2nd Owner">2nd Owner</option>
+            <option value="3rd Owner">3rd Owner</option>
+          </select>
+        </div>
+
+        <!-- Pricing -->
+        <div class="form-group">
+          <label for="edit-car-price">Price (INR)</label>
+          <input type="number" id="edit-car-price" placeholder="e.g. 850000" required>
+        </div>
+
+        <div class="form-group" style="flex-direction: row; align-items: center; gap: 0.5rem; padding-top: 1.5rem;">
+          <input type="checkbox" id="edit-car-negotiable" style="width: auto; margin: 0;">
+          <label for="edit-car-negotiable" style="margin: 0; cursor: pointer;">Price Negotiable</label>
+        </div>
+
+        <!-- Media Section -->
+        <div class="form-group full-width">
+          <label>Update Car Images (.jpg, .jpeg, .png, .heic, .heif) — Leave blank to keep current photos</label>
+          <input type="file" id="edit-car-image-upload" accept=".jpg, .jpeg, .png, .heic, .heif, image/heic, image/heif" multiple>
+          <div id="edit-car-images-preview" class="image-preview-strip" style="display: flex; gap: 0.5rem; margin-top: 0.5rem; overflow-x: auto; padding: 0.5rem 0;"></div>
+        </div>
+
+        <!-- Delivery Section -->
+        <div class="form-group full-width" style="border-top: 1px solid var(--admin-border); margin-top: 1rem; padding-top: 1rem;">
+          <h4><i class="fa-solid fa-truck-ramp-box"></i> Delivery Tracking Logs</h4>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-car-delivery-status">Delivery Status</label>
+          <select id="edit-car-delivery-status">
+            <option value="Available">Available (Not Sold Yet)</option>
+            <option value="In Transit">In Transit</option>
+            <option value="Delivered">Delivered</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-car-delivery-date">Delivery Date</label>
+          <input type="date" id="edit-car-delivery-date">
+        </div>
+
+        <div class="form-group full-width">
+          <label for="edit-car-delivery-notes">Delivery Notes</label>
+          <textarea id="edit-car-delivery-notes" placeholder="e.g. Delivered to customer in Mysuru with key handover ceremony." rows="2" style="background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.75rem; border-radius: 8px; color: var(--admin-text); font-family: inherit; resize: vertical;"></textarea>
+        </div>
+
+        <div class="form-group full-width">
+          <label>Update Delivery Photos (.jpg, .jpeg, .png, .heic, .heif) — Leave blank to keep current photos</label>
+          <input type="file" id="edit-car-delivery-images-upload" accept=".jpg, .jpeg, .png, .heic, .heif, image/heic, image/heif" multiple>
+          <div id="edit-delivery-images-preview" class="image-preview-strip" style="display: flex; gap: 0.5rem; margin-top: 0.5rem; overflow-x: auto; padding: 0.5rem 0;"></div>
+        </div>
+
+        <div class="form-group full-width" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+          <button type="submit" class="btn-primary" style="flex: 1;"><i class="fa-solid fa-save"></i> Save Changes</button>
+          <button type="button" class="btn-outline" style="flex: 1;" onclick="closeEditModal()">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
 

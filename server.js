@@ -89,16 +89,42 @@ app.get('/api/cars', async (req, res) => {
 });
 
 app.post('/api/cars', async (req, res) => {
-  const { brand, model, category, year, km, fuel, transmission, ownership, image, images } = req.body;
+  const { brand, model, category, year, km, fuel, transmission, ownership, image, images, variant, color, price, negotiable, delivery_status, delivery_images, delivery_notes, delivery_date } = req.body;
   try {
     const result = await db.query(
-      'INSERT INTO cars (brand, model, category, year, km, fuel, transmission, ownership, image, images) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
-      [brand, model, category, year, km, fuel, transmission, ownership, image, images]
+      `INSERT INTO cars (
+        brand, model, category, year, km, fuel, transmission, ownership, image, images,
+        variant, color, price, negotiable, delivery_status, delivery_images, delivery_notes, delivery_date
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18) RETURNING *`,
+      [brand, model, category, year, km, fuel, transmission, ownership, image, images, variant, color, price, negotiable, delivery_status || 'Available', delivery_images, delivery_notes, delivery_date]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error('Error adding car:', err);
     res.status(500).json({ error: 'Server error adding car' });
+  }
+});
+
+app.put('/api/cars/:id', async (req, res) => {
+  const { id } = req.params;
+  const { brand, model, category, year, km, fuel, transmission, ownership, image, images, variant, color, price, negotiable, delivery_status, delivery_images, delivery_notes, delivery_date } = req.body;
+  try {
+    const result = await db.query(
+      `UPDATE cars SET 
+        brand = $1, model = $2, category = $3, year = $4, km = $5, 
+        fuel = $6, transmission = $7, ownership = $8, image = $9, images = $10,
+        variant = $11, color = $12, price = $13, negotiable = $14,
+        delivery_status = $15, delivery_images = $16, delivery_notes = $17, delivery_date = $18
+      WHERE id = $19 RETURNING *`,
+      [brand, model, category, year, km, fuel, transmission, ownership, image, images, variant, color, price, negotiable, delivery_status, delivery_images, delivery_notes, delivery_date, id]
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Car not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error updating car:', err);
+    res.status(500).json({ error: 'Server error updating car' });
   }
 });
 
