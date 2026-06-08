@@ -188,11 +188,44 @@ app.post('/api/login', (req, res) => {
   }
 });
 
+// ── Health Check Endpoint (used by UptimeRobot / keep-alive ping) ──────────
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Fallback to serve index.html
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// ── Start Server ─────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+
+  // ── Self Keep-Alive Ping (prevents Render free-tier cold starts) ────────────
+  // Render spins down after 15 min of inactivity. We ping ourselves every
+  // 14 minutes so the service stays warm 24/7 without an external service.
+  const https = require('https');
+  const http  = require('http');
+
+  const SITE_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+  const PING_INTERVAL_MS = 14 * 60 * 1000; // 14 minutes
+
+  const pingself = () => {
+    const url = `${SITE_URL}/health`;
+    const client = url.startsWith('https') ? https : http;
+    const req = client.get(url, (res) => {
+      console.log(`[keep-alive] Pinged ${url} → ${res.statusCode}`);
+    });
+    req.on('error', (err) => {
+      console.warn(`[keep-alive] Ping failed: ${err.message}`);
+    });
+    req.end();
+  };
+
+  // First ping after 1 minute, then every 14 minutes thereafter
+  setTimeout(() => {
+    pingself();
+    setInterval(pingself, PING_INTERVAL_MS);
+  }, 60 * 1000);
 });
