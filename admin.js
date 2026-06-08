@@ -128,17 +128,54 @@ async function renderAdminCars() {
   }
 }
 
+// Helper to compress and convert images to Base64
+function compressAndConvertToBase64(fileOrBlob, maxWidth = 1000, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        let width = img.width;
+        let height = img.height;
+        
+        // Downscale if image exceeds max width
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Convert canvas image to compressed JPEG Base64
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        resolve(dataUrl);
+      };
+      img.onerror = function(err) {
+        reject(err);
+      };
+      img.src = e.target.result;
+    };
+    reader.onerror = function(err) {
+      reject(err);
+    };
+    reader.readAsDataURL(fileOrBlob);
+  });
+}
+
 // Handle Add Car
 document.getElementById("add-car-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   
   const submitBtn = e.target.querySelector('button[type="submit"]');
   const originalBtnText = submitBtn.innerHTML;
-  submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+  submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
   submitBtn.disabled = true;
 
   try {
-    // 1. Upload the images first
     const fileInput = document.getElementById("car-image-upload");
     if (fileInput.files.length === 0) {
       alert("Please select at least one image to upload.");
@@ -147,10 +184,12 @@ document.getElementById("add-car-form").addEventListener("submit", async (e) => 
       return;
     }
 
-    const formData = new FormData();
+    const base64Images = [];
     for (let i = 0; i < fileInput.files.length; i++) {
       const file = fileInput.files[i];
       const nameLower = file.name.toLowerCase();
+      let imageBlob = file;
+
       if (nameLower.endsWith(".heic") || nameLower.endsWith(".heif")) {
         if (typeof heic2any === "undefined") {
           alert("Apple Photo converter is still loading or could not be loaded. Please check your internet connection and try again.");
@@ -161,10 +200,7 @@ document.getElementById("add-car-form").addEventListener("submit", async (e) => 
         try {
           submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Converting Apple Photo ${i+1}...`;
           const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.85 });
-          const jpegBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
-          const newFileName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
-          const convertedFile = new File([jpegBlob], newFileName, { type: "image/jpeg" });
-          formData.append("images", convertedFile);
+          imageBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
         } catch (convErr) {
           console.error("HEIC conversion error: ", convErr);
           alert(`Failed to convert Apple Photo "${file.name}". It might be corrupted. Please try converting it on your device first.`);
@@ -172,28 +208,27 @@ document.getElementById("add-car-form").addEventListener("submit", async (e) => 
           submitBtn.disabled = false;
           return;
         }
-      } else {
-        formData.append("images", file);
+      }
+
+      try {
+        submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Compressing Photo ${i+1}...`;
+        const base64Data = await compressAndConvertToBase64(imageBlob, 1000, 0.7);
+        base64Images.push(base64Data);
+      } catch (compErr) {
+        console.error("Compression error: ", compErr);
+        alert(`Failed to process and compress image "${file.name}".`);
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        return;
       }
     }
 
-    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading...';
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving to Database...';
 
-    const uploadRes = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData
-    });
-    const uploadData = await uploadRes.json();
+    const primaryImageUrl = base64Images[0];
+    const imagesJsonString = JSON.stringify(base64Images);
 
-    if (!uploadRes.ok || !uploadData.success) {
-      throw new Error(uploadData.message || 'Image upload failed');
-    }
-
-    const imageUrls = uploadData.imageUrls;
-    const primaryImageUrl = imageUrls[0];
-    const imagesJsonString = JSON.stringify(imageUrls);
-
-    // 2. Add the car with the returned image URLs
+    // 2. Add the car with the returned Base64 images
     const newCar = {
       brand: document.getElementById("car-brand").value,
       model: document.getElementById("car-model").value,

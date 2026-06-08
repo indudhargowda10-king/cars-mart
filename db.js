@@ -121,6 +121,11 @@ async function initDB() {
       ALTER TABLE cars ADD COLUMN IF NOT EXISTS images TEXT;
     `);
 
+    // Ensure primary image column can store larger base64 strings
+    await client.query(`
+      ALTER TABLE cars ALTER COLUMN image TYPE TEXT;
+    `);
+
     // Seeding has been commented out to prevent pseudo cars from automatically reappearing when deleted
     /*
     // Check if table is empty
