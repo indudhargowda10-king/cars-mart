@@ -138,6 +138,17 @@ async function initDB() {
       ALTER TABLE cars ADD COLUMN IF NOT EXISTS delivery_date VARCHAR(50);
     `);
 
+    // Create deliveries table if it does not exist
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS deliveries (
+        id SERIAL PRIMARY KEY,
+        car_details VARCHAR(255) NOT NULL,
+        delivery_date VARCHAR(50),
+        delivery_notes TEXT,
+        delivery_images TEXT
+      );
+    `);
+
     // Seeding has been commented out to prevent pseudo cars from automatically reappearing when deleted
     /*
     // Check if table is empty

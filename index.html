@@ -100,6 +100,7 @@
         <li class="nav-item"><a href="cars.html" class="nav-link">Our Cars</a></li>
         <li class="nav-item"><a href="#sell-car" class="nav-link">Sell Car</a></li>
         <li class="nav-item"><a href="#gallery" class="nav-link">Gallery</a></li>
+        <li class="nav-item"><a href="#happy-deliveries" class="nav-link">Deliveries</a></li>
         <li class="nav-item"><a href="#modular-grid" class="nav-link">About</a></li>
         <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
       </ul>
@@ -404,6 +405,26 @@
   </section>
 
   <!-- ==========================================================================
+       8B. HAPPY DELIVERIES SECTION (NEW STANDALONE SHOWCASE)
+       ========================================================================== -->
+  <section id="happy-deliveries" class="gallery-section" style="border-top: 1px solid var(--border-color); padding-top: 5rem; position: relative;">
+    <div class="gallery-bg-blur glow-1"></div>
+    <div class="gallery-bg-blur glow-2"></div>
+    
+    <div class="container">
+      <div class="gallery-header">
+        <div class="gallery-label"><i class="fa-solid fa-truck-ramp-box"></i> Happy Handovers</div>
+        <h2 class="gallery-title">Our Happy <span>Customer Deliveries</span></h2>
+        <p class="gallery-subtitle">Real handovers, real smiles. Celebrating second-hand vehicle handovers to their proud new owners in Mysuru.</p>
+      </div>
+
+      <div class="grid delivery-grid" id="deliveries-grid-container" style="margin-top: 3rem;">
+        <!-- Rendered Dynamically via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
        9. SELL YOUR CAR SECTION
        ========================================================================== -->
   <section id="sell-car">
@@ -632,18 +653,7 @@
           </div>
         </div>
 
-        <!-- Delivery Updates Section -->
-        <div class="modal-delivery-updates" id="modal-delivery-section" style="grid-column: 1 / -1; border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-top: 1.5rem; display: none;">
-          <h4 style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; color: var(--accent-orange);"><i class="fa-solid fa-truck-ramp-box"></i> Delivery Updates</h4>
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center;">
-            <span class="status-badge" id="modal-delivery-badge">Available</span>
-            <span id="modal-delivery-date" style="font-size: 0.9rem; color: var(--text-muted);"></span>
-          </div>
-          <p id="modal-delivery-notes" style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1rem;"></p>
-          <div class="modal-delivery-gallery" id="modal-delivery-gallery" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
-            <!-- Delivery photos rendered dynamically via JS -->
-          </div>
-        </div>
+
       </div>
     </div>
   </div>

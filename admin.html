@@ -229,34 +229,7 @@
             <input type="file" id="car-image-upload" accept=".jpg, .jpeg, .png, .heic, .heif, image/heic, image/heif" multiple required>
           </div>
 
-          <!-- Delivery Section (NEW) -->
-          <div class="form-group full-width" style="border-top: 1px solid var(--admin-border); margin-top: 1.5rem; padding-top: 1.5rem;">
-            <h4><i class="fa-solid fa-truck-ramp-box"></i> Delivery Updates (Optional)</h4>
-          </div>
 
-          <div class="form-group">
-            <label for="car-delivery-status">Delivery Status</label>
-            <select id="car-delivery-status">
-              <option value="Available">Available (Not Sold Yet)</option>
-              <option value="In Transit">In Transit</option>
-              <option value="Delivered">Delivered</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="car-delivery-date">Delivery Date</label>
-            <input type="date" id="car-delivery-date">
-          </div>
-
-          <div class="form-group full-width">
-            <label for="car-delivery-notes">Delivery Notes</label>
-            <textarea id="car-delivery-notes" placeholder="e.g. Delivered to customer in Mysuru with key handover ceremony." rows="2" style="background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.75rem; border-radius: 8px; color: var(--admin-text); font-family: inherit; resize: vertical;"></textarea>
-          </div>
-
-          <div class="form-group full-width">
-            <label>Upload Delivery Photos (.jpg, .jpeg, .png, .heic, .heif) — Select Multiple</label>
-            <input type="file" id="car-delivery-images-upload" accept=".jpg, .jpeg, .png, .heic, .heif, image/heic, image/heif" multiple>
-          </div>
 
           <div class="form-group full-width" style="margin-top: 1rem;">
             <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Add Car to Showroom</button>
@@ -270,16 +243,9 @@
           <h3><i class="fa-solid fa-list"></i> Current Inventory</h3>
           <span class="inventory-count" id="inventory-count">0 Cars</span>
         </div>
-        
         <div class="inventory-filters-row" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
           <input type="text" id="inventory-search-brand" placeholder="Search by Brand..." style="flex: 1; min-width: 150px; background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.6rem; border-radius: 6px; color: var(--admin-text); font-family: inherit;" oninput="filterInventoryTable()">
           <input type="text" id="inventory-search-model" placeholder="Search by Model..." style="flex: 1; min-width: 150px; background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.6rem; border-radius: 6px; color: var(--admin-text); font-family: inherit;" oninput="filterInventoryTable()">
-          <select id="inventory-search-status" style="flex: 1; min-width: 150px; background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.6rem; border-radius: 6px; color: var(--admin-text); font-family: inherit;" onchange="filterInventoryTable()">
-            <option value="">All Statuses</option>
-            <option value="Available">Available</option>
-            <option value="In Transit">In Transit</option>
-            <option value="Delivered">Delivered</option>
-          </select>
         </div>
         
         <div class="inventory-table-wrapper">
@@ -295,6 +261,66 @@
               </tr>
             </thead>
             <tbody id="inventory-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Manage Deliveries Section -->
+      <section class="admin-section deliveries-section" style="margin-top: 2rem;">
+        <div class="section-header">
+          <h3><i class="fa-solid fa-truck-ramp-box"></i> Manage Deliveries</h3>
+        </div>
+        
+        <form id="add-delivery-form" class="add-car-grid" style="margin-bottom: 2rem;">
+          <div class="form-group full-width">
+            <h4 style="margin: 0; color: var(--admin-text); font-size: 1.1rem;"><i class="fa-solid fa-file-signature"></i> Add Happy Customer Handover</h4>
+          </div>
+          
+          <div class="form-group">
+            <label for="delivery-car-details">Car Details (e.g. Brand Model Variant Year)</label>
+            <input type="text" id="delivery-car-details" placeholder="e.g. Maruti Suzuki Swift VXI (2018)" required style="background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.65rem 0.75rem; border-radius: 8px; color: var(--admin-text); font-family: inherit;">
+          </div>
+
+          <div class="form-group">
+            <label for="delivery-date">Handover Date</label>
+            <input type="date" id="delivery-date" required style="background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.65rem 0.75rem; border-radius: 8px; color: var(--admin-text); font-family: inherit;">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="delivery-notes">Handover Notes / Testimonial</label>
+            <textarea id="delivery-notes" placeholder="e.g. Delivered to a happy family in Vijayanagar, Mysuru. Keys handed over with sweet box." rows="2" style="background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.75rem; border-radius: 8px; color: var(--admin-text); font-family: inherit; resize: vertical;"></textarea>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Upload Handover Photos (.jpg, .jpeg, .png, .heic, .heif) — Select Multiple</label>
+            <input type="file" id="delivery-images-upload" accept=".jpg, .jpeg, .png, .heic, .heif, image/heic, image/heif" multiple required>
+            <div id="delivery-upload-progress" style="font-size: 0.85rem; color: var(--accent-orange); margin-top: 0.5rem; display: none;"></div>
+          </div>
+
+          <div class="form-group full-width" style="margin-top: 1rem;">
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-check-circle"></i> Save Delivery Handover</button>
+          </div>
+        </form>
+
+        <div class="section-header" style="border-top: 1px solid var(--admin-border); padding-top: 1.5rem; margin-top: 1.5rem;">
+          <h3><i class="fa-solid fa-images"></i> Happy Handover History</h3>
+          <span class="inventory-count" id="deliveries-count">0 Deliveries</span>
+        </div>
+
+        <div class="inventory-table-wrapper">
+          <table class="inventory-table">
+            <thead>
+              <tr>
+                <th style="width: 120px;">Photos</th>
+                <th>Car Details</th>
+                <th>Handover Date</th>
+                <th>Notes / Testimonial</th>
+                <th style="width: 120px; text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="deliveries-tbody">
               <!-- Rendered via JS -->
             </tbody>
           </table>
@@ -473,35 +499,7 @@
           <div id="edit-car-images-preview" class="image-preview-strip" style="display: flex; gap: 0.5rem; margin-top: 0.5rem; overflow-x: auto; padding: 0.5rem 0;"></div>
         </div>
 
-        <!-- Delivery Section -->
-        <div class="form-group full-width" style="border-top: 1px solid var(--admin-border); margin-top: 1rem; padding-top: 1rem;">
-          <h4><i class="fa-solid fa-truck-ramp-box"></i> Delivery Tracking Logs</h4>
-        </div>
 
-        <div class="form-group">
-          <label for="edit-car-delivery-status">Delivery Status</label>
-          <select id="edit-car-delivery-status">
-            <option value="Available">Available (Not Sold Yet)</option>
-            <option value="In Transit">In Transit</option>
-            <option value="Delivered">Delivered</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="edit-car-delivery-date">Delivery Date</label>
-          <input type="date" id="edit-car-delivery-date">
-        </div>
-
-        <div class="form-group full-width">
-          <label for="edit-car-delivery-notes">Delivery Notes</label>
-          <textarea id="edit-car-delivery-notes" placeholder="e.g. Delivered to customer in Mysuru with key handover ceremony." rows="2" style="background: var(--admin-input-bg); border: 1px solid var(--admin-border); padding: 0.75rem; border-radius: 8px; color: var(--admin-text); font-family: inherit; resize: vertical;"></textarea>
-        </div>
-
-        <div class="form-group full-width">
-          <label>Update Delivery Photos (.jpg, .jpeg, .png, .heic, .heif) — Leave blank to keep current photos</label>
-          <input type="file" id="edit-car-delivery-images-upload" accept=".jpg, .jpeg, .png, .heic, .heif, image/heic, image/heif" multiple>
-          <div id="edit-delivery-images-preview" class="image-preview-strip" style="display: flex; gap: 0.5rem; margin-top: 0.5rem; overflow-x: auto; padding: 0.5rem 0;"></div>
-        </div>
 
         <div class="form-group full-width" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
           <button type="submit" class="btn-primary" style="flex: 1;"><i class="fa-solid fa-save"></i> Save Changes</button>

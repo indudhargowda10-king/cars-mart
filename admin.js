@@ -186,6 +186,7 @@ function showDashboard() {
   document.getElementById("login-screen").style.display = "none";
   document.getElementById("dashboard-screen").style.display = "block";
   renderAdminCars();
+  renderAdminDeliveries();
 }
 
 let adminCarsList = [];
@@ -209,11 +210,6 @@ async function renderAdminCars() {
 
     adminCarsList.forEach(car => {
       const tr = document.createElement("tr");
-      
-      // Delivery Status Badge
-      const status = car.delivery_status || 'Available';
-      const statusClass = status.toLowerCase().replace(" ", "-");
-      const statusBadge = `<span class="status-badge ${statusClass}">${status}</span>`;
       
       // Formatted Price
       let priceDisplay = "Call";
@@ -243,7 +239,7 @@ async function renderAdminCars() {
           <span style="font-size: 0.9rem;">${car.km.toLocaleString()} km</span><br>
           <strong style="color: var(--admin-primary); font-size: 0.85rem;">${priceDisplay}</strong>
         </td>
-        <td>${statusBadge}</td>
+        <td>${car.ownership || ''}</td>
         <td style="white-space: nowrap;">
           <button class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem; margin-right: 0.3rem;" onclick="editCar(${car.id})">
             <i class="fa-solid fa-edit"></i> Edit
@@ -367,16 +363,6 @@ document.getElementById("add-car-form").addEventListener("submit", async (e) => 
       submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${msg}`;
     });
 
-    // 6. Process delivery images
-    const deliveryFileInput = document.getElementById("car-delivery-images-upload");
-    let deliveryImagesJson = "[]";
-    if (deliveryFileInput.files.length > 0) {
-      const base64DeliveryImages = await compressAndConvertFiles(deliveryFileInput.files, (msg) => {
-        submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Delivery: ${msg}`;
-      });
-      deliveryImagesJson = JSON.stringify(base64DeliveryImages);
-    }
-
     submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving to Database...';
 
     const primaryImageUrl = base64Images[0];
@@ -396,11 +382,7 @@ document.getElementById("add-car-form").addEventListener("submit", async (e) => 
       price: parseFloat(document.getElementById("car-price").value),
       negotiable: document.getElementById("car-negotiable").checked,
       image: primaryImageUrl,
-      images: imagesJsonString,
-      delivery_status: document.getElementById("car-delivery-status").value,
-      delivery_date: document.getElementById("car-delivery-date").value,
-      delivery_notes: document.getElementById("car-delivery-notes").value.trim(),
-      delivery_images: deliveryImagesJson
+      images: imagesJsonString
     };
 
     const res = await fetch('/api/cars', {
@@ -509,12 +491,6 @@ window.editCar = async function(id) {
   document.getElementById("edit-car-ownership").value = car.ownership || "1st Owner";
   document.getElementById("edit-car-price").value = car.price || "";
   document.getElementById("edit-car-negotiable").checked = car.negotiable || false;
-  
-  // Set delivery tracking details
-  document.getElementById("edit-car-delivery-status").value = car.delivery_status || "Available";
-  document.getElementById("edit-car-delivery-date").value = car.delivery_date || "";
-  document.getElementById("edit-car-delivery-notes").value = car.delivery_notes || "";
-  
   // Render previews
   renderEditPreviews(car);
   
@@ -530,10 +506,8 @@ window.closeEditModal = function() {
 
 function renderEditPreviews(car) {
   const carPreview = document.getElementById("edit-car-images-preview");
-  const deliveryPreview = document.getElementById("edit-delivery-images-preview");
   
   carPreview.innerHTML = "";
-  deliveryPreview.innerHTML = "";
   
   let carImgs = [];
   try {
@@ -547,22 +521,6 @@ function renderEditPreviews(car) {
     wrap.className = "preview-thumb-wrap";
     wrap.innerHTML = `<img src="${img}" onerror="this.src='logo2.png'">`;
     carPreview.appendChild(wrap);
-  });
-  
-  let delImgs = [];
-  if (car.delivery_images) {
-    try {
-      delImgs = JSON.parse(car.delivery_images);
-    } catch(e) {
-      delImgs = [];
-    }
-  }
-  
-  delImgs.filter(Boolean).forEach(img => {
-    const wrap = document.createElement("div");
-    wrap.className = "preview-thumb-wrap";
-    wrap.innerHTML = `<img src="${img}" onerror="this.src='logo2.png'">`;
-    deliveryPreview.appendChild(wrap);
   });
 }
 
@@ -607,18 +565,6 @@ document.getElementById("edit-car-form").addEventListener("submit", async (e) =>
       primaryImageUrl = base64Images[0];
       imagesJsonString = JSON.stringify(base64Images);
     }
-
-    // 5. Process new delivery images if selected
-    const deliveryFileInput = document.getElementById("edit-car-delivery-images-upload");
-    let deliveryImagesJson = currentEditingCar.delivery_images || "[]";
-    
-    if (deliveryFileInput.files.length > 0) {
-      const base64DeliveryImages = await compressAndConvertFiles(deliveryFileInput.files, (msg) => {
-        submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Delivery: ${msg}`;
-      });
-      deliveryImagesJson = JSON.stringify(base64DeliveryImages);
-    }
-
     submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating Database...';
 
     const updatedCar = {
@@ -635,11 +581,7 @@ document.getElementById("edit-car-form").addEventListener("submit", async (e) =>
       price: parseFloat(document.getElementById("edit-car-price").value),
       negotiable: document.getElementById("edit-car-negotiable").checked,
       image: primaryImageUrl,
-      images: imagesJsonString,
-      delivery_status: document.getElementById("edit-car-delivery-status").value,
-      delivery_date: document.getElementById("edit-car-delivery-date").value,
-      delivery_notes: document.getElementById("edit-car-delivery-notes").value.trim(),
-      delivery_images: deliveryImagesJson
+      images: imagesJsonString
     };
 
     const res = await fetch(`/api/cars/${currentEditingCar.id}`, {
@@ -668,7 +610,6 @@ document.getElementById("edit-car-form").addEventListener("submit", async (e) =>
 function filterInventoryTable() {
   const brandSearch = document.getElementById("inventory-search-brand").value.toLowerCase();
   const modelSearch = document.getElementById("inventory-search-model").value.toLowerCase();
-  const statusSearch = document.getElementById("inventory-search-status").value;
   
   const rows = document.querySelectorAll("#inventory-tbody tr");
   
@@ -677,14 +618,11 @@ function filterInventoryTable() {
     if (row.cells.length < 5) return;
     
     const brandModelText = row.cells[1].innerText.toLowerCase();
-    const statusBadge = row.cells[4].querySelector('.status-badge');
-    const statusText = statusBadge ? statusBadge.innerText.trim() : "";
     
     const matchesBrand = brandSearch === "" || brandModelText.includes(brandSearch);
     const matchesModel = modelSearch === "" || brandModelText.includes(modelSearch);
-    const matchesStatus = statusSearch === "" || statusText.toLowerCase() === statusSearch.toLowerCase();
     
-    if (matchesBrand && matchesModel && matchesStatus) {
+    if (matchesBrand && matchesModel) {
       row.style.display = "";
     } else {
       row.style.display = "none";
@@ -706,6 +644,162 @@ window.deleteCar = async function(id) {
     } catch (err) {
       console.error(err);
       alert("Server error deleting car.");
+    }
+  }
+};
+
+// ==========================================================================
+// DELIVERIES MANAGEMENT (NEW STANDALONE OPTION)
+// ==========================================================================
+let adminDeliveriesList = [];
+
+// Render Deliveries Table
+async function renderAdminDeliveries() {
+  const tbody = document.getElementById("deliveries-tbody");
+  const countSpan = document.getElementById("deliveries-count");
+  if (!tbody) return;
+
+  try {
+    const res = await fetch('/api/deliveries');
+    adminDeliveriesList = await res.json();
+
+    if (countSpan) countSpan.innerText = `${adminDeliveriesList.length} Deliveries`;
+    tbody.innerHTML = "";
+
+    if (adminDeliveriesList.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--admin-muted);">No deliveries recorded.</td></tr>`;
+      return;
+    }
+
+    adminDeliveriesList.forEach(del => {
+      const tr = document.createElement("tr");
+
+      let images = [];
+      try {
+        images = del.delivery_images ? JSON.parse(del.delivery_images) : [];
+      } catch (e) {
+        console.error(e);
+      }
+
+      // Render thumbnail strip
+      let photoStrip = "";
+      if (images.length > 0) {
+        photoStrip = `<div class="image-preview-strip" style="display: flex; gap: 0.25rem;">`;
+        images.forEach(img => {
+          photoStrip += `<img src="${img}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid var(--admin-border);" onerror="this.src='logo2.png'">`;
+        });
+        photoStrip += `</div>`;
+      } else {
+        photoStrip = `<span style="font-size: 0.85rem; color: var(--admin-muted); font-style: italic;">No photos</span>`;
+      }
+
+      // Format notes snippet
+      const notes = del.delivery_notes || "No notes.";
+
+      tr.innerHTML = `
+        <td>${photoStrip}</td>
+        <td><strong>${del.car_details}</strong></td>
+        <td><span style="font-size: 0.9rem;">${del.delivery_date || ''}</span></td>
+        <td><span style="font-size: 0.85rem; color: var(--admin-muted);">${notes}</span></td>
+        <td style="text-align: center;">
+          <button class="btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="deleteDelivery(${del.id})">
+            <i class="fa-solid fa-trash"></i> Delete
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (err) {
+    console.error("Error fetching admin deliveries", err);
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--admin-danger);">Failed to load deliveries.</td></tr>`;
+  }
+}
+
+// Handle Add Delivery Form
+const addDeliveryForm = document.getElementById("add-delivery-form");
+if (addDeliveryForm) {
+  addDeliveryForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    const progressDiv = document.getElementById("delivery-upload-progress");
+
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+    submitBtn.disabled = true;
+    if (progressDiv) {
+      progressDiv.style.display = "block";
+      progressDiv.innerText = "Processing photos...";
+    }
+
+    try {
+      const carDetails = document.getElementById("delivery-car-details").value.trim();
+      const deliveryDate = document.getElementById("delivery-date").value;
+      const deliveryNotes = document.getElementById("delivery-notes").value.trim();
+      const fileInput = document.getElementById("delivery-images-upload");
+
+      if (fileInput.files.length === 0) {
+        alert("Please select at least one photo of the delivery.");
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        if (progressDiv) progressDiv.style.display = "none";
+        return;
+      }
+
+      // Convert and compress photos to base64
+      const base64Images = await compressAndConvertFiles(fileInput.files, (msg) => {
+        if (progressDiv) progressDiv.innerText = msg;
+      });
+
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+      const payload = {
+        car_details: carDetails,
+        delivery_date: deliveryDate,
+        delivery_notes: deliveryNotes,
+        delivery_images: JSON.stringify(base64Images)
+      };
+
+      const res = await fetch('/api/deliveries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        renderAdminDeliveries();
+        e.target.reset();
+        alert("Delivery saved successfully!");
+      } else {
+        alert("Failed to save delivery.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Server error saving delivery.");
+    } finally {
+      submitBtn.innerHTML = originalBtnText;
+      submitBtn.disabled = false;
+      if (progressDiv) {
+        progressDiv.style.display = "none";
+        progressDiv.innerText = "";
+      }
+    }
+  });
+}
+
+// Handle Delete Delivery
+window.deleteDelivery = async function(id) {
+  if (confirm("Are you sure you want to delete this delivery record?")) {
+    try {
+      const res = await fetch(`/api/deliveries/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        renderAdminDeliveries();
+      } else {
+        alert("Failed to delete delivery.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error deleting delivery.");
     }
   }
 };

@@ -3191,3 +3191,44 @@ footer {
     width: 95%;
   }
 }
+
+/* ==========================================================================
+   13. STANDALONE HAPPY DELIVERIES SECTION STYLES
+   ========================================================================== */
+.delivery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.delivery-thumbs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.delivery-thumbs::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.delivery-thumbs::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.delivery-thumbs img {
+  opacity: 0.7;
+  transition: all 0.2s ease;
+}
+
+.delivery-thumbs img:hover {
+  opacity: 1;
+  border-color: var(--accent-orange) !important;
+}
+
+@media (max-width: 768px) {
+  .delivery-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

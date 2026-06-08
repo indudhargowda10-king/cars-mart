@@ -164,6 +164,7 @@ async function loadCars() {
   renderCarsGrid(carsData);
   renderSliderCars();
   renderGalleryCars();
+  loadDeliveries();
 
   // Hash deep-link check
   const hash = window.location.hash;
@@ -230,18 +231,8 @@ function renderCarsGrid(carsList) {
   carsList.forEach(car => {
     const card = document.createElement("div");
     card.className = "car-card";
-    
-    // Status Badge if In Transit / Delivered
-    const status = car.delivery_status || 'Available';
-    let statusBadge = "";
-    if (status !== 'Available') {
-      const statusClass = status.toLowerCase().replace(" ", "-");
-      statusBadge = `<span class="delivery-status-badge status-badge ${statusClass}" style="position: absolute; top: 1rem; left: 1rem; z-index: 10;">${status}</span>`;
-    }
-
     card.innerHTML = `
       <div class="car-card-img-wrap" onclick="triggerCarModal(${car.id})" style="position: relative;">
-        ${statusBadge}
         <span class="inspected-badge"><i class="fa-solid fa-circle-check"></i> Inspected</span>
         <img src="${car.image}" alt="${car.brand} ${car.model}" onerror="this.src='logo2.png'">
       </div>
@@ -664,68 +655,12 @@ function triggerCarModal(carId) {
   
   const statusEl = document.getElementById("modal-car-status");
   const warrantyEl = document.getElementById("modal-car-warranty");
-  
-  const status = car.delivery_status || 'Available';
   if (statusEl) {
-    statusEl.innerText = status;
-    statusEl.className = `modal-info-val status-badge ${status.toLowerCase().replace(" ", "-")}`;
+    statusEl.innerText = "Available";
+    statusEl.className = `modal-info-val status-badge available`;
     statusEl.style.fontSize = "0.8rem";
   }
   if (warrantyEl) warrantyEl.innerText = "1-Year Warranty Included";
-  
-  // Render Delivery Updates Section
-  const deliverySection = document.getElementById("modal-delivery-section");
-  const deliveryBadge = document.getElementById("modal-delivery-badge");
-  const deliveryDate = document.getElementById("modal-delivery-date");
-  const deliveryNotes = document.getElementById("modal-delivery-notes");
-  const deliveryGallery = document.getElementById("modal-delivery-gallery");
-
-  if (deliverySection) {
-    if (status !== 'Available') {
-      deliverySection.style.display = "block";
-      if (deliveryBadge) {
-        deliveryBadge.innerText = status;
-        deliveryBadge.className = `status-badge ${status.toLowerCase().replace(" ", "-")}`;
-      }
-      if (deliveryDate) {
-        deliveryDate.innerText = car.delivery_date ? `Date: ${car.delivery_date}` : "";
-      }
-      if (deliveryNotes) {
-        deliveryNotes.innerText = car.delivery_notes || "No notes available.";
-      }
-      if (deliveryGallery) {
-        deliveryGallery.innerHTML = "";
-        let delImgs = [];
-        if (car.delivery_images) {
-          try {
-            delImgs = JSON.parse(car.delivery_images);
-          } catch(e) {}
-        }
-        if (delImgs.length > 0) {
-          delImgs.forEach((img, idx) => {
-            const el = document.createElement("img");
-            el.src = img;
-            el.alt = `Delivery photo ${idx + 1}`;
-            el.style.width = "120px";
-            el.style.height = "80px";
-            el.style.objectFit = "cover";
-            el.style.borderRadius = "6px";
-            el.style.border = "1px solid var(--border-color)";
-            el.style.flexShrink = "0";
-            el.style.cursor = "pointer";
-            el.onerror = function() { this.src = 'logo2.png'; };
-            // Click delivery photo to open lightbox too!
-            el.onclick = () => openLightbox(delImgs, idx);
-            deliveryGallery.appendChild(el);
-          });
-        } else {
-          deliveryGallery.innerHTML = '<span style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">No delivery photos.</span>';
-        }
-      }
-    } else {
-      deliverySection.style.display = "none";
-    }
-  }
 
   // Parse images if available, otherwise fallback to single image array
   try {
@@ -1191,4 +1126,100 @@ function resetZoom() {
   if (img) {
     img.classList.remove("zoomed");
   }
+}
+
+// ==========================================================================
+// HAPPY DELIVERIES SHOWCASE LOGIC (STANDALONE OPTION)
+// ==========================================================================
+let deliveriesData = [];
+
+async function loadDeliveries() {
+  try {
+    const response = await fetch('/api/deliveries');
+    if (response.ok) {
+      deliveriesData = await response.json();
+    } else {
+      deliveriesData = [];
+    }
+  } catch (error) {
+    console.error("Failed to load deliveries from backend", error);
+    deliveriesData = [];
+  }
+  renderDeliveriesGrid(deliveriesData);
+}
+
+function renderDeliveriesGrid(deliveries) {
+  const container = document.getElementById("deliveries-grid-container");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (deliveries.length === 0) {
+    container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 3rem 0; color: var(--text-muted); font-style: italic;">No handovers recorded yet. Happy handovers coming soon!</div>`;
+    return;
+  }
+
+  deliveries.forEach(del => {
+    let images = [];
+    try {
+      images = del.delivery_images ? JSON.parse(del.delivery_images) : [];
+    } catch (e) {
+      console.error(e);
+    }
+    const coverImage = images[0] || 'logo2.png';
+
+    const card = document.createElement("div");
+    card.className = "car-card";
+    card.style.display = "flex";
+    card.style.flexDirection = "column";
+
+    // Format date nicely if possible
+    let dateStr = "";
+    if (del.delivery_date) {
+      try {
+        const d = new Date(del.delivery_date);
+        dateStr = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+      } catch (e) {
+        dateStr = del.delivery_date;
+      }
+    }
+
+    // Generate thumbnails strip if there are more than 1 image
+    let thumbStrip = "";
+    if (images.length > 1) {
+      thumbStrip = `<div class="delivery-thumbs" style="display: flex; gap: 0.5rem; margin-top: 0.75rem; overflow-x: auto; padding-bottom: 0.25rem;">`;
+      images.forEach((img, idx) => {
+        const safeImagesStr = JSON.stringify(images).replace(/"/g, '&quot;');
+        thumbStrip += `
+          <img src="${img}" 
+               alt="${del.car_details} handover ${idx + 1}" 
+               style="width: 50px; height: 35px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 1px solid var(--border-color);"
+               onclick="openLightbox(${safeImagesStr}, ${idx})"
+               onerror="this.src='logo2.png'">`;
+      });
+      thumbStrip += `</div>`;
+    }
+
+    const safeCoverImagesStr = JSON.stringify(images).replace(/"/g, '&quot;');
+
+    card.innerHTML = `
+      <div class="car-card-img-wrap" style="position: relative; height: 200px; overflow: hidden; cursor: pointer;" onclick="openLightbox(${safeCoverImagesStr}, 0)">
+        <img src="${coverImage}" alt="${del.car_details}" class="car-card-img" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='logo2.png'">
+        <span class="delivery-status-badge status-badge delivered" style="position: absolute; top: 1rem; left: 1rem; z-index: 10;">Delivered</span>
+      </div>
+      <div class="car-card-content" style="padding: 1.5rem; display: flex; flex-direction: column; flex: 1;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+          <h3 class="car-card-title" style="margin: 0; font-size: 1.15rem; color: var(--text-primary); font-weight: 700;">${del.car_details}</h3>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--accent-orange); font-weight: 600; margin-bottom: 0.75rem;">
+          <i class="fa-solid fa-calendar-alt"></i> Handover: ${dateStr}
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin: 0; flex: 1; font-style: italic;">
+          "${del.delivery_notes || 'No description available.'}"
+        </p>
+        ${thumbStrip}
+      </div>
+    `;
+    container.appendChild(card);
+  });
 }

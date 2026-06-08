@@ -139,6 +139,44 @@ app.delete('/api/cars/:id', async (req, res) => {
   }
 });
 
+// Deliveries API endpoints
+app.get('/api/deliveries', async (req, res) => {
+  try {
+    const result = await db.query('SELECT * FROM deliveries ORDER BY id DESC');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching deliveries:', err);
+    res.status(500).json({ error: 'Server error fetching deliveries' });
+  }
+});
+
+app.post('/api/deliveries', async (req, res) => {
+  const { car_details, delivery_date, delivery_notes, delivery_images } = req.body;
+  try {
+    const result = await db.query(
+      `INSERT INTO deliveries (car_details, delivery_date, delivery_notes, delivery_images) 
+       VALUES ($1, $2, $3, $4) RETURNING *`,
+      [car_details, delivery_date, delivery_notes, delivery_images]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Error adding delivery:', err);
+    res.status(500).json({ error: 'Server error adding delivery' });
+  }
+});
+
+app.delete('/api/deliveries/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.query('DELETE FROM deliveries WHERE id = $1', [id]);
+    res.json({ message: 'Delivery deleted' });
+  } catch (err) {
+    console.error('Error deleting delivery:', err);
+    res.status(500).json({ error: 'Server error deleting delivery' });
+  }
+});
+
+
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   // Simple authentication for showcase
