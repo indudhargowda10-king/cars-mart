@@ -638,7 +638,7 @@ function triggerCarModal(carId) {
   const webShareBtn = document.getElementById("web-share-btn");
   if (webShareBtn) {
     if (navigator.share) {
-      webShareBtn.style.display = "flex";
+      webShareBtn.style.display = "inline-flex";
     } else {
       webShareBtn.style.display = "none";
     }

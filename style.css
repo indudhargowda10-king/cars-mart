@@ -1367,6 +1367,59 @@ a {
   box-shadow: 0 4px 10px rgba(22, 163, 74, 0.2);
 }
 
+/* Share action row — modal bottom buttons */
+.share-actions-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  font-family: inherit;
+}
+
+[data-theme="light"] .share-btn {
+  border-color: rgba(0, 0, 0, 0.2);
+  color: var(--primary);
+}
+
+.share-btn:hover {
+  background: var(--accent-orange);
+  border-color: var(--accent-orange);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* On very small screens ensure they wrap neatly and stay readable */
+@media (max-width: 400px) {
+  .share-actions-row {
+    gap: 0.4rem;
+  }
+  .share-btn {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.6rem;
+  }
+}
+
+
 /* ==========================================================================
    8. BLACK MODULAR GRID SECTION
    ========================================================================== */
